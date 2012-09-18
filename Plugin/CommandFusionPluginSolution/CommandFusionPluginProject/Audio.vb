@@ -1,4 +1,9 @@
 ﻿Public NotInheritable Class Audio
+
+    Public Shared Function GetCurrentFile() As MediaCenter.IMJFileAutomation
+        Return GlobalHelpers.mediaCenterRef.GetZones.GetZone(GlobalHelpers.mediaCenterRef.GetZones.GetActiveZone).GetPlayingFile
+    End Function
+
     Public Shared Function GetArtists(Optional ByVal PerRow As Integer = 1) As String
         ' Start list data
         Dim list As String = "\xF3RLISTARTISTS\xF4start|"
@@ -32,13 +37,11 @@
                             ' Get a list of all albums
                             albumFiles = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=""" & files.GetFile(i + j).Artist & """ ~nodup=[album]")
                             list &= "item|" & i + j & "|" & theArtist & "|" & albumFiles.GetNumberFiles & "|"
-                            'Debug.WriteLine("Artist:" & theTrack)
                         End If
                     End If
                 Next
                 list = list.Substring(0, list.Length - 1)
                 list &= "\xF5\xF5"
-                Debug.WriteLine(i)
             Next
             ' End list data
             list &= "\xF3RLISTARTISTS\xF4end\xF5\xF5"
@@ -78,13 +81,11 @@
                                 theYear = ""
                             End If
                             list &= "item|" & i + j & "|" & theAlbum & "|" & trackFiles.GetNumberFiles & "|" & theYear & "|"
-                            'Debug.WriteLine("Artist:" & theArtist)
                         End If
                     End If
                 Next
                 list = list.Substring(0, list.Length - 1)
                 list &= "\xF5\xF5"
-                Debug.WriteLine(i)
             Next
             ' End list data
             list &= "\xF3RLISTALBUMS\xF4end\xF5\xF5"
@@ -116,13 +117,11 @@
                         ' If the track isnt blank
                         If theTrack <> "" Then
                             list &= "item|" & files.GetFile(i + j).Tracknumber & "|" & theTrack & "|" & files.GetFile(i + j).Duration & "|"
-                            'Debug.WriteLine("Track:" & theArtist)
                         End If
                     End If
                 Next
                 list = list.Substring(0, list.Length - 1)
                 list &= "\xF5\xF5"
-                Debug.WriteLine(i)
             Next
             ' End list data
             list &= "\xF3RLISTTRACKS\xF4end\xF5\xF5"
@@ -151,7 +150,7 @@
         ElseIf Artist <> "" And Album <> "" Then
             ' Play a whole album
             Dim files As MediaCenter.IMJFilesAutomation
-            files = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=[" & Artist & "] [album]=[" & Album & "]") ' Get the albums tracks
+            files = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=[" & Artist & "] [album]=[" & Album & "] ~sort=[Track #]") ' Get the albums tracks
             If files.GetNumberFiles > 0 Then
                 For i As Integer = 0 To files.GetNumberFiles - 1
                     GlobalHelpers.mediaCenterRef.GetCurPlaylist.AddFileByKey(files.GetFile(i).GetKey, GlobalHelpers.mediaCenterRef.GetCurPlaylist.Position + i + 1)
@@ -194,7 +193,7 @@
         ElseIf Artist <> "" And Album <> "" Then
             ' Play a whole album next
             Dim files As MediaCenter.IMJFilesAutomation
-            files = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=[" & Artist & "] [album]=[" & Album & "]") ' Get the albums tracks
+            files = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=[" & Artist & "] [album]=[" & Album & "] ~sort=[Track #]") ' Get the albums tracks
             If files.GetNumberFiles > 0 Then
                 For i As Integer = 0 To files.GetNumberFiles - 1
                     GlobalHelpers.mediaCenterRef.GetCurPlaylist.AddFileByKey(files.GetFile(i).GetKey, GlobalHelpers.mediaCenterRef.GetCurPlaylist.Position + i + 1)
@@ -223,7 +222,7 @@
         ElseIf Artist <> "" And Album <> "" Then
             ' Add a whole album
             Dim files As MediaCenter.IMJFilesAutomation
-            files = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=[" & Artist & "] [album]=[" & Album & "]") ' Get the albums tracks
+            files = GlobalHelpers.mediaCenterRef.Search("[Media Type]=[Audio] [artist]=[" & Artist & "] [album]=[" & Album & "] ~sort=[Track #]") ' Get the albums tracks
             If files.GetNumberFiles > 0 Then
                 For i As Integer = 0 To files.GetNumberFiles - 1
                     GlobalHelpers.mediaCenterRef.GetCurPlaylist.AddFileByKey(files.GetFile(i).GetKey, -1)
@@ -267,14 +266,11 @@
                             Else
                                 list &= "zone|" & i + j & "|" & theZoneName.Replace("|", ":") & "|" & theZone.GetPlayback.State & "|||||||"
                             End If
-
-                            'Debug.WriteLine("Track:" & theArtist)
                         End If
                     End If
                 Next
                 list = list.Substring(0, list.Length - 1)
                 list &= "\xF5\xF5"
-                Debug.WriteLine(i)
             Next
             ' End list data
             list &= "\xF3RLISTZONES\xF4end\xF5\xF5"
@@ -292,6 +288,7 @@
         Try
             ' Bug in the SDK means we have to request the zone name manually
             response &= GlobalHelpers.mediaCenterRef.GetZones.GetZoneName(GlobalHelpers.mediaCenterRef.GetZones.GetActiveZone)
+            response &= "|" & GlobalHelpers.mediaCenterRef.GetZones.GetActiveZone
             response &= "\xF5\xF5"
 
         Catch ex As Exception
@@ -311,14 +308,14 @@
             Dim theZone As MediaCenter.IMJZoneAutomation = GlobalHelpers.mediaCenterRef.GetZones.GetZone(theZoneID)
 
             ' Start the response by giving the zone ID and name
-            response = "\xF3RNOWPLAYING\xF4zone|" & theZoneID & "|" & _
+            response = "\xF3RNOWPLAYING\xF4" & theZoneID & "|" & _
             GlobalHelpers.mediaCenterRef.GetZones.GetZoneName(theZoneID).Replace("|", ":") & "|"
 
             ' Now add the currently playing track info
             ' state|position|duration|artist|album|trackname|tracknum
             If theZone.GetPlayingFile IsNot Nothing Then
                 response &= theZone.GetPlayback.State & "|" & theZone.GetPlayback.Position & "|" & theZone.GetPlayingFile.Duration & "|" & _
-                theZone.GetPlayingFile.Artist & "|" & theZone.GetPlayingFile.Album & "|" & theZone.GetPlayingFile.Name & "|" & theZone.GetPlayingFile.Tracknumber
+                theZone.GetPlayingFile.Artist & "|" & theZone.GetPlayingFile.Album & "|" & theZone.GetPlayingFile.Name & "|" & theZone.GetPlayingFile.Tracknumber & "|" & theZone.GetCurPlaylist.Position
             Else
                 response &= theZone.GetPlayback.State & "|0|0||||"
             End If
@@ -345,16 +342,19 @@
                 For j As Integer = 0 To PerRow - 1
                     If files.GetNumberFiles > (i + j) Then
                         ' Ensure all pipes are replaced with a colon incase an artist name contains the pipe separator used in our protocol
-                        Dim theTrack As String = files.GetFile(i + j).Name.Replace("|", ":")
+                        Dim theTrack As MediaCenter.IMJFileAutomation = files.GetFile(i + j)
+                        Dim theTrackName As String = theTrack.Name.Replace("|", ":")
                         ' If the track isnt blank
-                        If theTrack <> "" Then
-                            list &= "item|" & i + j & "|" & theTrack & "|" & files.GetFile(i + j).Duration & "|"
+                        If theTrackName <> "" Then
+                            ' playlistPosition|duration|artist|album|trackname|tracknum
+                            list &= "item|" & i + j + 1 & "|" & theTrack.Duration & "|" & theTrack.Artist.Replace("|", ":") & "|" & theTrack.Album.Replace("|", ":") & "|" & theTrack.Name.Replace("|", ":") & "|" & theTrack.Tracknumber
+                        Else
+                            list &= "item||||||"
                         End If
                     End If
                 Next
                 list = list.Substring(0, list.Length - 1)
                 list &= "\xF5\xF5"
-                Debug.WriteLine(i)
             Next
             ' End list data
             list &= "\xF3RLISTZONEPLAYLIST\xF4end\xF5\xF5"
