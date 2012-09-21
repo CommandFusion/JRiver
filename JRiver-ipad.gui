@@ -1,0 +1,224 @@
+<gui>
+  <properties>
+    <project>JRiver for iPad</project>
+    <designer>CommandFusion</designer>
+    <size>
+      <portrait width="768" height="1024" />
+      <landscape width="1024" height="768" />
+    </size>
+    <imagefolder>
+    </imagefolder>
+    <debug loaderrors="0" connectionerrors="0" />
+    <devices>
+      <device name="Jarrod's iPhone">693CBC248292EB74D39DF7B0415B25CA</device>
+      <device name="Jarrod's iTouch">A1FDD44DB1F7CCDAA389BD22C9A92466</device>
+      <device name="Jarrod's iPhone 3G">3D0F1EA73558BA41AAE0105C51EDB533</device>
+      <device name="CommandFusion iTouch 3rd Gen">9C9309EA6867A4C87FEB1BC0E8A1A20C</device>
+      <device name="CommandFusion iPad">7FA41088AB80BA09CF10FA579B95C51C</device>
+      <device name="Lisa's iPhone">0D19F0E73C0A5334F0E468234AFEA2BB</device>
+      <device name="SP iPad">F9D64E2B02DC5FA0AE220B3D20A66115</device>
+      <device name="GuiLink iPad">7AE2743F5FB3D11EDAA5A6A2A6A90C04</device>
+      <device name="RFC iPad">B6F88BE7D54D6E8A10EB726C3655FF84</device>
+      <device name="Development iPad #2">F23E70BC8C90C29C94610D9B35F95A88</device>
+      <device name="CommandFusion iPhone 4">5AE0AE1AD7C838CFAE3BA26D23ED0712</device>
+      <device name="CommandFusion Archos5">D5652759DCC69DEC2503149E48959E55</device>
+      <device name="CommandFusion Black iPad2">4A10D1837F75AF1FC608D8C964A47900</device>
+      <device name="CommandFusion White iPad2">A65B95A392D915326B24CC37C7A88537</device>
+      <device name="SP iPad2 Black 64GB">1A8373FA3DDA092446A6BF489B67828E</device>
+      <device name="CommandFusion iPhone4S 16GB White">1AA37565C0BFC23BBBF9D7AB2B8156E4</device>
+      <device name="Jarrod's Kindle">829F60F3F264F0B4364535FCB1293DDC</device>
+    </devices>
+  </properties>
+  <systems>
+    <system name="WOL" ip="255.255.255.255" port="9" protocol="udp" alwayson="1" offlinequeue="0" accept="0" acceptBroadcasts="1" ssl="0" maxconnections="0" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="" connectionStatus="0" disconnectionStatus="0" />
+  </systems>
+  <themes>
+    <theme type="button" name=".newtheme_1[state='0']"><![CDATA[padding: 0px 0px 0px 0px;  filter: Alpha(Opacity=100); -moz-opacity:1; opacity: 1; background-color: Green; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".newtheme_1[state='1']"><![CDATA[padding: 0px 0px 0px 0px;  filter: Alpha(Opacity=100); -moz-opacity:1; opacity: 1; background-color: Maroon; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="background" name=".bg_landscape_statusbar"><![CDATA[ background-image: url(bg_landscape_statusbar.png); background-repeat: no-repeat;]]></theme>
+    <theme type="background" name=".bg_landscape_nostatusbar"><![CDATA[ background-image: url(bg_landscape_nostatusbar.png); background-repeat: no-repeat;]]></theme>
+    <theme type="background" name=".popup_zones"><![CDATA[ background-image: url(popup_zones_bg.png); background-repeat: no-repeat;]]></theme>
+    <theme type="text" name=".popup_title"><![CDATA[ text-shadow: rgba(0,0,0,1) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; text-align: center; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".zones[state='0']"><![CDATA[padding: 0px 5px 0px 0px; background-image: url(img_zones.png); color: Black; font-size: 14px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: right; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".zones[state='1']"><![CDATA[padding: 0px 5px 0px 0px; background-image: url(img_zones.png); color: Black; font-size: 14px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: right; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="background" name=".popup_zones_listitem"><![CDATA[ background-image: url(popup_zones_listitem.png); background-repeat: no-repeat;]]></theme>
+    <theme type="button" name=".listitem[state='0']"><![CDATA[padding: 0px 3px 0px 3px; color: Black; font-size: 20px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".listitem[state='1']"><![CDATA[padding: 0px 3px 0px 3px; color: #0080FF; font-size: 20px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".title_center"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #6B6B6B; font-size: 20px; font-family: 'Arial'; text-align: center; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="gauge" name=".vol[state='0']"><![CDATA[ background-image: url(vol_off.png);]]></theme>
+    <theme type="gauge" name=".vol[state='1']"><![CDATA[ background-image: url(vol_on.png);]]></theme>
+    <theme type="button" name=".vol_up[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_up.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".vol_up[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_up.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".vol_down[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_down.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".vol_down[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_down.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".sidebar_listitem[state='0']"><![CDATA[padding: 0px 10px 0px 10px; background-image: url(sidebar_listitem_off.png); text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: Black; font-size: 14px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".sidebar_listitem[state='1']"><![CDATA[padding: 0px 10px 0px 10px; background-image: url(sidebar_listitem_on.png); text-shadow: rgba(0,0,0,0.78) 0px -1px 0px; color: White; font-size: 14px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".back[state='0']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(sidebar_back_off.png); text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".back[state='1']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(sidebar_back_on.png); text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".sidebar_subtitle"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #272727; font-size: 14px; font-family: 'Arial'; text-align: center; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".blank[state='0']"><![CDATA[padding: 0px 0px 0px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".blank[state='1']"><![CDATA[padding: 0px 0px 0px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".topbar_light"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #6B6B6B; font-size: 14px; font-family: 'Arial'; text-align: center; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".field_left"><![CDATA[ text-shadow: rgba(255,255,255,0.39) 0px 1px 0px; color: #3E3E3E; font-size: 14px; font-family: 'Arial'; text-align: right; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".title_left"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #6B6B6B; font-size: 20px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+  </themes>
+  <scripts>
+    <script name="JRiver.js" />
+    <script name="main.js" />
+    <script name="wol.js" />
+  </scripts>
+  <page name="Startup" j="0" transition="" subtype="" time="0" ease="">
+    <portrait />
+    <landscape t="bg_landscape_statusbar">
+      <btn j="0" x="442" y="34" w="140" h="35" t="newtheme_1" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
+        <inactive s="0">PlayPause</inactive>
+        <active s="0">PlayPause</active>
+      </btn>
+      <subpage name="now_playing" x="0" y="473" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <subpage name="volume" x="0" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <list j="2" x="0" y="129" w="259" h="344" headerSub="" titleSub="" contentSub="sidebar_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
+      <btn j="2" x="0" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browseBack();">
+        <inactive s="0">back</inactive>
+        <active s="0">back</active>
+      </btn>
+      <txt j="2" x="64" y="88" w="196" h="39" t="title_left" wrap="True" l="0">New Text Object</txt>
+      <subpage name="zones" x="826" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <subpage name="popup_zones" x="728" y="69" j="1" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <txt j="3" x="269" y="88" w="350" h="39" t="title_left" wrap="True" l="0">
+      </txt>
+      <btn j="0" x="586" y="34" w="65" h="35" t="newtheme_1" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;Next&quot;);">
+        <inactive s="0">SKIP+</inactive>
+        <active s="0">SKIP+</active>
+      </btn>
+      <btn j="0" x="373" y="34" w="65" h="35" t="newtheme_1" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;Previous&quot;);">
+        <inactive s="0">SKIP-</inactive>
+        <active s="0">SKIP-</active>
+      </btn>
+      <list j="3" x="260" y="130" w="764" h="638" headerSub="" titleSub="" contentSub="coverart_listitems4" footerSub="" orientation="v" l="0" swipedelete="0" />
+      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+    </landscape>
+  </page>
+  <subpage name="popup_zones_listitem" w="238" h="44" clip="1" t="popup_zones_listitem">
+    <btn j="100001" x="0" y="0" w="238" h="44" t="listitem" flip="None" sim="0" l="0" s="1" js="JRiver.player.selectZone(tokens[&quot;zoneid&quot;]);">
+      <inactive s="100001">List Item</inactive>
+      <active s="100001">List Item</active>
+    </btn>
+  </subpage>
+  <subpage name="now_playing" w="259" h="295" clip="1">
+    <img x="0" y="0" w="259" h="36" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_sidebar_title.png</img>
+    <img x="0" y="36" w="259" h="259" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_nowplaying_bg.png</img>
+    <img x="0" y="36" w="259" h="259" j="100" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_nowplaying_bg.png</img>
+    <txt j="0" x="0" y="0" w="259" h="36" t="sidebar_subtitle" wrap="False" l="0">NOW PLAYING</txt>
+  </subpage>
+  <subpage name="volume" w="260" h="65" clip="1">
+    <btn j="0" x="3" y="0" w="38" h="65" t="vol_down" flip="None" sim="0" l="0" s="1" js="JRiver.player.setVolume(-0.10, 1);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <img x="50" y="24" w="12" h="21" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">vol_slider_left.png</img>
+    <img x="198" y="24" w="12" h="21" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">vol_slider_right.png</img>
+    <btn j="0" x="222" y="0" w="38" h="65" t="vol_up" flip="None" sim="0" l="0" s="1" js="JRiver.player.setVolume(0.10, 1);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <slider j="1" d="0" x="62" y="24" w="136" h="21" min="0" max="100" decimals="0" unit="decimal" t="vol" sim="0" l="0">
+      <indicator state="0" offsetX="0" offsetY="1" x="0" y="0" w="0" h="0" t="">vol_indicator.png</indicator>
+      <indicator state="1" offsetX="0" offsetY="1" zoom="100" />
+    </slider>
+  </subpage>
+  <subpage name="sidebar_listitem" w="259" h="44" clip="1">
+    <btn j="100001" x="0" y="0" w="259" h="44" t="sidebar_listitem" flip="None" sim="1" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+      <inactive s="100001">List Item</inactive>
+      <active s="100001">List Item</active>
+    </btn>
+  </subpage>
+  <subpage name="zones" w="192" h="65" clip="1">
+    <txt j="0" x="4" y="3" w="187" h="25" t="topbar_light" wrap="False" l="0">ZONE</txt>
+    <img x="1" y="27" w="15" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_left.png</img>
+    <img x="16" y="27" w="149" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_middle.png</img>
+    <img x="165" y="27" w="23" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_right_dropdown.png</img>
+    <txt j="1" x="10" y="26" w="148" h="32" t="field_left" wrap="False" l="0">New Text Object</txt>
+    <btn j="0" x="0" y="0" w="192" h="65" t="blank" flip="None" sim="0" l="0" s="1" js="CF.setJoins([{join: &quot;d1&quot;, value: 1}, {join: &quot;d999999&quot;, value: 1}]);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+  </subpage>
+  <subpage name="popup_cancel_p" w="768" h="1024" clip="1">
+    <btn j="0" x="0" y="0" w="768" h="1024" t="blank" flip="None" sim="0" l="0" s="1" js="cancelPopups();">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+  </subpage>
+  <subpage name="popup_cancel_l" w="1024" h="768" clip="1">
+    <btn j="0" x="0" y="0" w="1023" h="767" t="blank" flip="None" sim="0" l="0" s="1" js="cancelPopups();">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+  </subpage>
+  <subpage name="coverart_listitems4" w="764" h="176" clip="1">
+    <img x="29" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+    <img x="212" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+    <img x="395" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+    <img x="578" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+    <txt j="100001" x="16" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
+    </txt>
+    <txt j="100002" x="199" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
+    </txt>
+    <txt j="100003" x="382" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
+    </txt>
+    <txt j="100004" x="565" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
+    </txt>
+    <btn j="100001" x="29" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="100002" x="212" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="100003" x="395" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="100004" x="578" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <img x="40" y="11" w="135" h="135" j="100011" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <img x="223" y="11" w="135" h="135" j="100012" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <img x="406" y="11" w="135" h="135" j="100013" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <img x="589" y="11" w="135" h="135" j="100014" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+  </subpage>
+  <subpage name="track_items" w="764" h="44" clip="1">
+    <txt j="100001" x="14" y="0" w="750" h="44" t="title_left" wrap="False" l="0">Text</txt>
+    <btn j="100001" x="0" y="0" w="764" h="44" t="blank" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+  </subpage>
+  <subpage name="popup_zones" w="296" h="410" clip="1" t="popup_zones">
+    <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
+    <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
+    <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
+  </subpage>
+</gui>
