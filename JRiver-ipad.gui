@@ -31,6 +31,9 @@
   </properties>
   <systems>
     <system name="WOL" ip="255.255.255.255" port="9" protocol="udp" alwayson="1" offlinequeue="0" accept="0" acceptBroadcasts="1" ssl="0" maxconnections="0" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="" connectionStatus="0" disconnectionStatus="0" />
+    <system name="Loopback" ip="127.0.0.1" port="10207" protocol="udp" alwayson="0" offlinequeue="0" accept="0" acceptBroadcasts="0" ssl="0" maxconnections="0" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="" connectionStatus="0" disconnectionStatus="0">
+      <cmd name="TrackPosSlider" js="JRiver.player.setPositionBySlider(data, 382);" jsSendsCommand="True">[sliderval]</cmd>
+    </system>
   </systems>
   <themes>
     <theme type="button" name=".newtheme_1[state='0']"><![CDATA[padding: 0px 0px 0px 0px;  filter: Alpha(Opacity=100); -moz-opacity:1; opacity: 1; background-color: Green; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
@@ -48,9 +51,9 @@
     <theme type="gauge" name=".vol[state='0']"><![CDATA[ background-image: url(vol_off.png);]]></theme>
     <theme type="gauge" name=".vol[state='1']"><![CDATA[ background-image: url(vol_on.png);]]></theme>
     <theme type="button" name=".vol_up[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_up.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
-    <theme type="button" name=".vol_up[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_up.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".vol_up[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_up_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".vol_down[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_down.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
-    <theme type="button" name=".vol_down[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_down.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".vol_down[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(vol_down_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".sidebar_listitem[state='0']"><![CDATA[padding: 0px 10px 0px 10px; background-image: url(sidebar_listitem_off.png); text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: Black; font-size: 14px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".sidebar_listitem[state='1']"><![CDATA[padding: 0px 10px 0px 10px; background-image: url(sidebar_listitem_on.png); text-shadow: rgba(0,0,0,0.78) 0px -1px 0px; color: White; font-size: 14px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".back[state='0']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(sidebar_back_off.png); text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
@@ -59,43 +62,150 @@
     <theme type="button" name=".blank[state='0']"><![CDATA[padding: 0px 0px 0px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".blank[state='1']"><![CDATA[padding: 0px 0px 0px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="text" name=".topbar_light"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #6B6B6B; font-size: 14px; font-family: 'Arial'; text-align: center; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
-    <theme type="text" name=".field_left"><![CDATA[ text-shadow: rgba(255,255,255,0.39) 0px 1px 0px; color: #3E3E3E; font-size: 14px; font-family: 'Arial'; text-align: right; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".field_left"><![CDATA[ text-shadow: rgba(255,255,255,0.39) 0px 1px 0px; color: #3E3E3E; font-size: 14px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
     <theme type="text" name=".title_left"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #6B6B6B; font-size: 20px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".transport_prev[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(transport_prev_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".transport_prev[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(transport_prev_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".transport_next[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(transport_next_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".transport_next[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(transport_next_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".transport_playpause[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(transport_play_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".transport_playpause[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(transport_pause_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".icon_shuffle[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(icon_shuffle_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".icon_shuffle[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(icon_shuffle_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".icon_repeat[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(icon_repeat_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".icon_repeat[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(icon_repeat_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="background" name=".bg_portrait_statusbar"><![CDATA[ background-image: url(bg_portrait_statusbar.png); background-repeat: no-repeat;]]></theme>
+    <theme type="gauge" name=".slider_h_thin[state='0']"><![CDATA[ background-image: url(slider_h_thin_off.png);]]></theme>
+    <theme type="gauge" name=".slider_h_thin[state='1']"><![CDATA[ background-image: url(slider_h_thin_on.png);]]></theme>
+    <theme type="button" name=".playlist_item[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(dark_listitem_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".playlist_item[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(dark_listitem_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".item_left"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: #DDDDDD; font-size: 20px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".item_right"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: Silver; font-size: 20px; font-family: 'Arial'; text-align: right; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".item_left_dark"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: #9E9E9E; font-size: 20px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".item_med_left"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: #9E9E9E; font-size: 16px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".item_med_right"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: #9E9E9E; font-size: 16px; font-family: 'Arial'; text-align: right; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".setting_item_first[state='0']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_item_first.png); color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item_first[state='1']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_item_first.png); color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item_middle[state='0']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_item_middle.png); color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item_middle[state='1']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_item_middle.png); color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item_last[state='0']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_item_last.png); color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item_last[state='1']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_item_last.png); color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".setting_title"><![CDATA[ text-shadow: rgba(255,255,255,0.78) 0px 1px 0px; color: #4C566C; font-size: 17px; font-family: 'Arial'; text-align: left; vertical-align: bottom; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".setting_item[state='0']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_button.png); color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item[state='1']"><![CDATA[padding: 0px 0px 0px 10px; background-image: url(setting_button.png); color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".check[state='0']"><![CDATA[padding: 0px 0px 0px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".check[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(check.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".sidebar_subtitle_left"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #272727; font-size: 14px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
   </themes>
+  <tokens>
+    <token name="accessKey" value="cYDGjk" persist="1" />
+    <token name="username" value="jarrod" persist="1" />
+    <token name="password" value="password" persist="1" />
+    <token name="trackMode" value="0" persist="1" />
+  </tokens>
   <scripts>
     <script name="JRiver.js" />
     <script name="main.js" />
     <script name="wol.js" />
   </scripts>
   <page name="Startup" j="0" transition="" subtype="" time="0" ease="">
-    <portrait />
+    <portrait t="bg_portrait_statusbar">
+      <subpage name="volume" x="0" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <subpage name="zones" x="576" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <btn j="10" x="357" y="21" w="53" h="65" t="transport_playpause" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <btn j="0" x="424" y="21" w="53" h="65" t="transport_next" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Next&quot;);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <btn j="0" x="291" y="21" w="53" h="65" t="transport_prev" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Previous&quot;);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <btn j="11" x="0" y="86" w="50" h="57" t="icon_repeat" flip="None" sim="0" l="0" s="1" js="CF.setJoins([{join: &quot;d7&quot;, value: 1}, {join: &quot;d999999&quot;, value: 1}]);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <btn j="12" x="51" y="86" w="50" h="57" t="icon_shuffle" flip="None" sim="0" l="0" s="1" js="CF.setJoins([{join: &quot;d8&quot;, value: 1}, {join: &quot;d999999&quot;, value: 1}]);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <img x="182" y="86" w="11" h="57" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">slider_h_thin_left.png</img>
+      <img x="575" y="86" w="11" h="57" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">slider_h_thin_right.png</img>
+      <img x="0" y="143" w="768" h="768" j="101" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+      <img x="0" y="143" w="768" h="768" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_overlay_large.png</img>
+      <slider j="2" d="0" x="193" y="86" w="382" h="57" min="0" max="382" decimals="0" dragCmd="TrackPosSlider" unit="decimal" t="slider_h_thin" sim="1" l="0">
+        <indicator state="0" offsetX="0" offsetY="0" x="0" y="0" w="0" h="0" t="">slider_thin_indicator.png</indicator>
+        <indicator state="1" offsetX="0" offsetY="0" zoom="100" />
+      </slider>
+      <subpage name="popup_zones" x="472" y="69" j="9" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <list j="4" x="0" y="303" w="768" h="720" headerSub="" titleSub="" contentSub="playlist_items" footerSub="" orientation="v" l="0" swipedelete="0" />
+      <img x="3" y="144" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+      <img x="13" y="156" w="135" h="135" j="100" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+      <txt j="110" x="164" y="153" w="591" h="32" t="item_left" wrap="False" l="0">Track Title</txt>
+      <txt j="111" x="164" y="173" w="591" h="32" t="item_med_left" wrap="False" l="0">Track Title</txt>
+      <txt j="109" x="596" y="100" w="58" h="32" t="item_med_left" wrap="False" l="0">00:00</txt>
+      <txt j="108" x="106" y="100" w="69" h="32" t="item_med_right" wrap="False" l="0">00:00</txt>
+      <img x="164" y="214" w="108" h="44" j="112" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_none.png</img>
+      <subpage name="popup_shuffle" x="78" y="68" j="8" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <subpage name="popup_cancel_p" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
+      <subpage name="popup_repeat" x="34" y="68" j="7" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+    </portrait>
     <landscape t="bg_landscape_statusbar">
-      <btn j="0" x="442" y="34" w="140" h="35" t="newtheme_1" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
-        <inactive s="0">PlayPause</inactive>
-        <active s="0">PlayPause</active>
+      <btn j="10" x="485" y="21" w="53" h="65" t="transport_playpause" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
       </btn>
       <subpage name="now_playing" x="0" y="473" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
       <subpage name="volume" x="0" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
       <list j="2" x="0" y="129" w="259" h="344" headerSub="" titleSub="" contentSub="sidebar_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
-      <btn j="2" x="0" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browseBack();">
+      <btn j="2" x="0" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browse();">
         <inactive s="0">back</inactive>
         <active s="0">back</active>
       </btn>
-      <txt j="2" x="64" y="88" w="196" h="39" t="title_left" wrap="True" l="0">New Text Object</txt>
+      <txt j="2" x="0" y="88" w="260" h="39" t="title_center" wrap="True" l="0">Loading...</txt>
       <subpage name="zones" x="826" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
-      <subpage name="popup_zones" x="728" y="69" j="1" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
-      <txt j="3" x="269" y="88" w="350" h="39" t="title_left" wrap="True" l="0">
+      <txt j="3" x="328" y="88" w="496" h="39" t="title_left" wrap="True" l="0">
       </txt>
-      <btn j="0" x="586" y="34" w="65" h="35" t="newtheme_1" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;Next&quot;);">
-        <inactive s="0">SKIP+</inactive>
-        <active s="0">SKIP+</active>
+      <btn j="0" x="552" y="21" w="53" h="65" t="transport_next" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Next&quot;);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
       </btn>
-      <btn j="0" x="373" y="34" w="65" h="35" t="newtheme_1" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;Previous&quot;);">
-        <inactive s="0">SKIP-</inactive>
-        <active s="0">SKIP-</active>
+      <btn j="0" x="419" y="21" w="53" h="65" t="transport_prev" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Previous&quot;);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
       </btn>
       <list j="3" x="260" y="130" w="764" h="638" headerSub="" titleSub="" contentSub="coverart_listitems4" footerSub="" orientation="v" l="0" swipedelete="0" />
-      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
+      <btn j="3" x="260" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browseBack();">
+        <inactive s="0">back</inactive>
+        <active s="0">back</active>
+      </btn>
+      <btn j="0" x="333" y="87" w="691" h="36" t="blank" flip="None" sim="0" l="0" s="1" js="CF.listScroll(&quot;l3&quot;, 0, CF.TopPosition, true);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <subpage name="popup_zones" x="728" y="69" j="1" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
     </landscape>
   </page>
   <subpage name="popup_zones_listitem" w="238" h="44" clip="1" t="popup_zones_listitem">
@@ -108,10 +218,11 @@
     <img x="0" y="0" w="259" h="36" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_sidebar_title.png</img>
     <img x="0" y="36" w="259" h="259" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_nowplaying_bg.png</img>
     <img x="0" y="36" w="259" h="259" j="100" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_nowplaying_bg.png</img>
-    <txt j="0" x="0" y="0" w="259" h="36" t="sidebar_subtitle" wrap="False" l="0">NOW PLAYING</txt>
+    <txt j="0" x="7" y="0" w="126" h="36" t="sidebar_subtitle_left" wrap="False" l="0">NOW PLAYING</txt>
+    <img x="182" y="0" w="77" h="36" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_rotate_info.png</img>
   </subpage>
   <subpage name="volume" w="260" h="65" clip="1">
-    <btn j="0" x="3" y="0" w="38" h="65" t="vol_down" flip="None" sim="0" l="0" s="1" js="JRiver.player.setVolume(-0.10, 1);">
+    <btn j="0" x="3" y="0" w="38" h="65" t="vol_down" flip="None" sim="1" l="0" s="1" js="JRiver.player.setVolume(-0.10, 1);">
       <inactive s="0">
       </inactive>
       <active s="0">
@@ -119,7 +230,7 @@
     </btn>
     <img x="50" y="24" w="12" h="21" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">vol_slider_left.png</img>
     <img x="198" y="24" w="12" h="21" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">vol_slider_right.png</img>
-    <btn j="0" x="222" y="0" w="38" h="65" t="vol_up" flip="None" sim="0" l="0" s="1" js="JRiver.player.setVolume(0.10, 1);">
+    <btn j="0" x="222" y="0" w="38" h="65" t="vol_up" flip="None" sim="1" l="0" s="1" js="JRiver.player.setVolume(0.10, 1);">
       <inactive s="0">
       </inactive>
       <active s="0">
@@ -138,11 +249,11 @@
   </subpage>
   <subpage name="zones" w="192" h="65" clip="1">
     <txt j="0" x="4" y="3" w="187" h="25" t="topbar_light" wrap="False" l="0">ZONE</txt>
-    <img x="1" y="27" w="15" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_left.png</img>
-    <img x="16" y="27" w="149" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_middle.png</img>
-    <img x="165" y="27" w="23" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_right_dropdown.png</img>
-    <txt j="1" x="10" y="26" w="148" h="32" t="field_left" wrap="False" l="0">New Text Object</txt>
-    <btn j="0" x="0" y="0" w="192" h="65" t="blank" flip="None" sim="0" l="0" s="1" js="CF.setJoins([{join: &quot;d1&quot;, value: 1}, {join: &quot;d999999&quot;, value: 1}]);">
+    <img x="1" y="27" w="15" h="33" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_left.png</img>
+    <img x="16" y="27" w="149" h="33" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_middle.png</img>
+    <img x="165" y="27" w="23" h="33" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">field_right_dropdown.png</img>
+    <txt j="1" x="13" y="26" w="148" h="32" t="field_left" wrap="False" l="0">Loading...</txt>
+    <btn j="0" x="0" y="0" w="192" h="65" t="blank" flip="None" sim="0" l="0" s="1" js="CF.setJoins([{join: &quot;d1&quot;, value: 1}, {join: &quot;d9&quot;, value: 1}, {join: &quot;d999999&quot;, value: 1}]);">
       <inactive s="0">
       </inactive>
       <active s="0">
@@ -166,10 +277,10 @@
     </btn>
   </subpage>
   <subpage name="coverart_listitems4" w="764" h="176" clip="1">
-    <img x="29" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
-    <img x="212" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
-    <img x="395" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
-    <img x="578" y="0" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+    <img x="29" y="0" w="157" h="157" j="100021" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <img x="212" y="0" w="157" h="157" j="100022" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <img x="395" y="0" w="157" h="157" j="100023" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <img x="578" y="0" w="157" h="157" j="100024" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
     <txt j="100001" x="16" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
     </txt>
     <txt j="100002" x="199" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
@@ -178,25 +289,25 @@
     </txt>
     <txt j="100004" x="565" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
     </txt>
-    <btn j="100001" x="29" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+    <btn j="100001" x="29" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
       <inactive s="0">
       </inactive>
       <active s="0">
       </active>
     </btn>
-    <btn j="100002" x="212" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+    <btn j="100002" x="212" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
       <inactive s="0">
       </inactive>
       <active s="0">
       </active>
     </btn>
-    <btn j="100003" x="395" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+    <btn j="100003" x="395" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
       <inactive s="0">
       </inactive>
       <active s="0">
       </active>
     </btn>
-    <btn j="100004" x="578" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+    <btn j="100004" x="578" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
       <inactive s="0">
       </inactive>
       <active s="0">
@@ -216,9 +327,141 @@
       </active>
     </btn>
   </subpage>
+  <subpage name="cache" w="768" h="1024" clip="1">
+    <img x="92" y="36" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
+    <img x="361" y="46" w="108" h="45" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_1.png</img>
+    <img x="361" y="46" w="108" h="45" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_2.png</img>
+    <img x="361" y="46" w="108" h="45" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_3.png</img>
+    <img x="361" y="46" w="108" h="45" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_4.png</img>
+    <img x="361" y="46" w="108" h="45" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_5.png</img>
+    <img x="361" y="46" w="108" h="45" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_none.png</img>
+  </subpage>
+  <subpage name="playlist_items" w="768" h="44" clip="1">
+    <btn j="100002" x="0" y="0" w="45" h="44" t="playlist_item" flip="None" sim="0" l="0" s="1" js="JRiver.player.getCurrentZone().playByIndex(listIndex);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="100001" x="45" y="0" w="723" h="44" t="playlist_item" flip="None" sim="1" l="0" s="1">
+      <actions>
+        <action>
+          <release delay="0" js="JRiver.player.getCurrentZone().playByIndex(listIndex);" />
+        </action>
+      </actions>
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <txt j="100001" x="52" y="0" w="564" h="44" t="item_left" wrap="False" l="0">Track Name</txt>
+    <txt j="100002" x="0" y="0" w="41" h="44" t="item_right" wrap="False" l="0">0</txt>
+    <img x="45" y="0" w="1" h="44" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">dark_item_splitter.png</img>
+    <img x="616" y="0" w="1" h="44" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">dark_item_splitter.png</img>
+    <txt j="100003" x="621" y="0" w="63" h="44" t="item_left_dark" wrap="False" l="0">00:00</txt>
+    <img x="502" y="0" w="108" h="44" j="100004" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_5.png</img>
+  </subpage>
   <subpage name="popup_zones" w="296" h="410" clip="1" t="popup_zones">
     <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
     <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
     <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
+  </subpage>
+  <subpage name="popup_shuffle" w="389" h="395" clip="1">
+    <img x="0" y="0" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_top_arrowleft_bg.png</img>
+    <img x="0" y="100" w="389" h="195" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_middle_bg.png</img>
+    <img x="0" y="100" w="389" h="195" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_middle.png</img>
+    <img x="0" y="295" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_bottom_bg.png</img>
+    <img x="0" y="0" w="389" h="100" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_top_arrowleft.png</img>
+    <img x="0" y="295" w="389" h="100" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_bottom.png</img>
+    <txt j="0" x="36" y="12" w="331" h="45" t="popup_title" wrap="False" l="0">Shuffle Options</txt>
+    <txt j="0" x="51" y="57" w="307" h="28" t="setting_title" wrap="False" l="0">Shuffle Mode</txt>
+    <btn j="0" x="50" y="92" w="302" h="44" t="setting_item_first" flip="None" sim="0" l="0" s="1" js="JRiver.player.setShuffle(3)">
+      <inactive s="0">Shuffle OFF</inactive>
+      <active s="0">Shuffle OFF</active>
+    </btn>
+    <btn j="0" x="50" y="136" w="302" h="44" t="setting_item_middle" flip="None" sim="0" l="0" s="1" js="JRiver.player.setShuffle(4)">
+      <inactive s="0">Shuffle ON</inactive>
+      <active s="0">Shuffle ON</active>
+    </btn>
+    <btn j="0" x="50" y="180" w="302" h="46" t="setting_item_last" flip="None" sim="0" l="0" s="1" js="JRiver.player.setShuffle(5)">
+      <inactive s="0">Shuffle AUTO</inactive>
+      <active s="0">Shuffle AUTO</active>
+    </btn>
+    <btn j="0" x="50" y="245" w="302" h="46" t="setting_item" flip="None" sim="1" l="0" s="1" js="JRiver.player.setShuffle(3); setTimeout(function() {JRiver.player.setShuffle(4);},250);">
+      <inactive s="0">Reshuffle</inactive>
+      <active s="0">Reshuffle</active>
+    </btn>
+    <btn j="0" x="50" y="299" w="302" h="46" t="setting_item" flip="None" sim="1" l="0" s="1" js="JRiver.player.doMCC(10041)">
+      <inactive s="0">Reshuffle Remaining</inactive>
+      <active s="0">Reshuffle Remaining</active>
+    </btn>
+    <btn j="120" x="327" y="107" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="121" x="327" y="151" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="122" x="327" y="196" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+  </subpage>
+  <subpage name="popup_repeat" w="389" h="320" clip="1">
+    <img x="0" y="0" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_top_arrowleft_bg.png</img>
+    <img x="0" y="100" w="389" h="120" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_middle_bg.png</img>
+    <img x="0" y="100" w="389" h="120" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_middle.png</img>
+    <img x="0" y="220" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_bottom_bg.png</img>
+    <img x="0" y="0" w="389" h="100" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_top_arrowleft.png</img>
+    <img x="0" y="220" w="389" h="100" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_bottom.png</img>
+    <txt j="0" x="36" y="12" w="331" h="45" t="popup_title" wrap="False" l="0">Repeat Options</txt>
+    <txt j="0" x="51" y="57" w="307" h="28" t="setting_title" wrap="False" l="0">Repeat Mode</txt>
+    <btn j="0" x="50" y="92" w="302" h="44" t="setting_item_first" flip="None" sim="0" l="0" s="1" js="JRiver.player.setRepeat(1)">
+      <inactive s="0">Repeat OFF</inactive>
+      <active s="0">Repeat OFF</active>
+    </btn>
+    <btn j="0" x="50" y="136" w="302" h="44" t="setting_item_middle" flip="None" sim="0" l="0" s="1" js="JRiver.player.setRepeat(2)">
+      <inactive s="0">Repeat PLAYING NOW</inactive>
+      <active s="0">Repeat PLAYING NOW</active>
+    </btn>
+    <btn j="0" x="50" y="224" w="302" h="46" t="setting_item_last" flip="None" sim="0" l="0" s="1" js="JRiver.player.doMCC(10036, -1)">
+      <inactive s="0">Stop After Each Item</inactive>
+      <active s="0">Stop After Each Item</active>
+    </btn>
+    <btn j="123" x="327" y="107" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="124" x="327" y="151" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="0" x="50" y="180" w="302" h="44" t="setting_item_middle" flip="None" sim="0" l="0" s="1" js="JRiver.player.setRepeat(3)">
+      <inactive s="0">Repeat CURRENT ITEM</inactive>
+      <active s="0">Repeat CURRENT ITEM</active>
+    </btn>
+    <btn j="125" x="327" y="196" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="126" x="327" y="240" w="13" h="14" t="check" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
   </subpage>
 </gui>
