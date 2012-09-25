@@ -33,6 +33,7 @@
     <system name="WOL" ip="255.255.255.255" port="9" protocol="udp" alwayson="1" offlinequeue="0" accept="0" acceptBroadcasts="1" ssl="0" maxconnections="0" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="" connectionStatus="0" disconnectionStatus="0" />
     <system name="Loopback" ip="127.0.0.1" port="10207" protocol="udp" alwayson="0" offlinequeue="0" accept="0" acceptBroadcasts="0" ssl="0" maxconnections="0" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="" connectionStatus="0" disconnectionStatus="0">
       <cmd name="TrackPosSlider" js="JRiver.player.setPositionBySlider(data, 382);" jsSendsCommand="True">[sliderval]</cmd>
+      <cmd name="VolSlider" js="JRiver.player.setVolume(data/100);" jsSendsCommand="True">[sliderval]</cmd>
     </system>
   </systems>
   <themes>
@@ -96,6 +97,17 @@
     <theme type="button" name=".check[state='0']"><![CDATA[padding: 0px 0px 0px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".check[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(check.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="text" name=".sidebar_subtitle_left"><![CDATA[ text-shadow: rgba(255,255,255,1) 0px 1px 0px; color: #272727; font-size: 14px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="input" name=".search"><![CDATA[ border-width: 0px; color: #272727; font-size: 14px; font-family: 'Arial'; text-align: left; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".btn_group_left[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(btn_group_left_off.png) 0 5 0 5; text-shadow: rgba(255,255,255,0.61) 0px 1px 0px; color: #4F5459; font-size: 12px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".btn_group_left[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(btn_group_left_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.61) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".btn_group_right[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(btn_group_right_off.png) 0 5 0 5; text-shadow: rgba(255,255,255,0.61) 0px 1px 0px; color: #4F5459; font-size: 12px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".btn_group_right[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(btn_group_right_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.61) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".btn_group_middle[state='0']"><![CDATA[padding: 0px 1px 0px 1px; -webkit-border-image: url(btn_group_middle_off.png) 0 1 0 1; text-shadow: rgba(255,255,255,0.61) 0px 1px 0px; color: #4F5459; font-size: 12px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".btn_group_middle[state='1']"><![CDATA[padding: 0px 1px 0px 1px; -webkit-border-image: url(btn_group_middle_on.png) 0 1 0 1; text-shadow: rgba(0,0,0,0.61) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".icon_gear[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(icon_gear_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".icon_gear[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(icon_gear_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="gauge" name=".dots[state='0']"><![CDATA[ background-image: url(img_list_speedscroll_dots.png);]]></theme>
+    <theme type="gauge" name=".dots[state='1']"><![CDATA[ background-image: url(img_list_speedscroll_dots.png);]]></theme>
   </themes>
   <tokens>
     <token name="accessKey" value="cYDGjk" persist="1" />
@@ -146,7 +158,7 @@
       <img x="575" y="86" w="11" h="57" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">slider_h_thin_right.png</img>
       <img x="0" y="143" w="768" h="768" j="101" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
       <img x="0" y="143" w="768" h="768" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_overlay_large.png</img>
-      <slider j="2" d="0" x="193" y="86" w="382" h="57" min="0" max="382" decimals="0" dragCmd="TrackPosSlider" unit="decimal" t="slider_h_thin" sim="1" l="0">
+      <slider j="2" d="0" x="193" y="86" w="382" h="57" min="0" max="382" decimals="0" dragCmd="TrackPosSlider" releaseCmd="TrackPosSlider" unit="decimal" t="slider_h_thin" sim="1" l="0">
         <indicator state="0" offsetX="0" offsetY="0" x="0" y="0" w="0" h="0" t="">slider_thin_indicator.png</indicator>
         <indicator state="1" offsetX="0" offsetY="0" zoom="100" />
       </slider>
@@ -159,12 +171,12 @@
       <txt j="109" x="596" y="100" w="58" h="32" t="item_med_left" wrap="False" l="0">00:00</txt>
       <txt j="108" x="106" y="100" w="69" h="32" t="item_med_right" wrap="False" l="0">00:00</txt>
       <img x="164" y="214" w="108" h="44" j="112" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_none.png</img>
-      <subpage name="popup_shuffle" x="78" y="68" j="8" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
       <subpage name="popup_cancel_p" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
-      <subpage name="popup_repeat" x="34" y="68" j="7" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <subpage name="popup_repeat" x="30" y="68" j="7" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <subpage name="popup_shuffle" x="78" y="68" j="8" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
     </portrait>
     <landscape t="bg_landscape_statusbar">
-      <btn j="10" x="485" y="21" w="53" h="65" t="transport_playpause" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
+      <btn j="10" x="405" y="21" w="53" h="65" t="transport_playpause" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
         <inactive s="0">
         </inactive>
         <active s="0">
@@ -181,31 +193,64 @@
       <subpage name="zones" x="826" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
       <txt j="3" x="328" y="88" w="496" h="39" t="title_left" wrap="True" l="0">
       </txt>
-      <btn j="0" x="552" y="21" w="53" h="65" t="transport_next" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Next&quot;);">
+      <btn j="0" x="472" y="21" w="53" h="65" t="transport_next" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Next&quot;);">
         <inactive s="0">
         </inactive>
         <active s="0">
         </active>
       </btn>
-      <btn j="0" x="419" y="21" w="53" h="65" t="transport_prev" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Previous&quot;);">
+      <btn j="0" x="339" y="21" w="53" h="65" t="transport_prev" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayback(&quot;Previous&quot;);">
         <inactive s="0">
         </inactive>
         <active s="0">
         </active>
       </btn>
       <list j="3" x="260" y="130" w="764" h="638" headerSub="" titleSub="" contentSub="coverart_listitems4" footerSub="" orientation="v" l="0" swipedelete="0" />
-      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
       <btn j="3" x="260" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browseBack();">
         <inactive s="0">back</inactive>
         <active s="0">back</active>
       </btn>
-      <btn j="0" x="333" y="87" w="691" h="36" t="blank" flip="None" sim="0" l="0" s="1" js="CF.listScroll(&quot;l3&quot;, 0, CF.TopPosition, true);">
+      <btn j="0" x="333" y="87" w="495" h="36" t="blank" flip="None" sim="0" l="0" s="1" js="CF.listScroll(&quot;l3&quot;, 0, CF.TopPosition, true);">
         <inactive s="0">
         </inactive>
         <active s="0">
         </active>
       </btn>
-      <subpage name="popup_zones" x="728" y="69" j="1" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
+      <subpage name="popup_zones" x="728" y="69" j="1" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <subpage name="search" x="594" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <btn j="0" x="827" y="85" w="40" h="43" t="btn_group_left" flip="None" sim="1" l="0" s="0">
+        <inactive s="0">
+          <img x="1" y="0" w="38" h="43">overlay_liststyle_details_off.png</img>
+        </inactive>
+        <active s="0">
+          <img x="1" y="0" w="38" h="43">overlay_liststyle_details_on.png</img>
+        </active>
+      </btn>
+      <btn j="0" x="867" y="85" w="38" h="43" t="btn_group_middle" flip="None" sim="1" l="0" s="0">
+        <inactive s="0">
+          <img x="-1" y="0" w="40" h="43">overlay_liststyle_group_off.png</img>
+        </inactive>
+        <active s="0">
+          <img x="-1" y="0" w="40" h="43">overlay_liststyle_group_on.png</img>
+        </active>
+      </btn>
+      <btn j="0" x="905" y="85" w="40" h="43" t="btn_group_right" flip="None" sim="1" l="0" s="0">
+        <inactive s="0">
+          <img x="-2" y="0" w="40" h="43">overlay_liststyle_art_off.png</img>
+        </inactive>
+        <active s="0">
+          <img x="-2" y="0" w="40" h="43">overlay_liststyle_art_on.png</img>
+        </active>
+      </btn>
+      <btn j="0" x="982" y="87" w="42" h="43" t="icon_gear" flip="None" sim="1" l="0" s="1">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
+      <slider j="3" d="0" x="986" y="130" w="38" h="638" min="0" max="100" decimals="0" unit="decimal" t="dots" invert="1" sim="1" l="0" />
+      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
+      <video x="53" y="540" w="153" h="168" j="99" play="98" stop="99" url="" bgcolor="" format="" auth_user="" auth_password="" auth_realm="" auth_host="" auth_method="" auth_proxy="" autoplay="1" showcontrols="1" />
     </landscape>
   </page>
   <subpage name="popup_zones_listitem" w="238" h="44" clip="1" t="popup_zones_listitem">
@@ -236,7 +281,7 @@
       <active s="0">
       </active>
     </btn>
-    <slider j="1" d="0" x="62" y="24" w="136" h="21" min="0" max="100" decimals="0" unit="decimal" t="vol" sim="0" l="0">
+    <slider j="1" d="0" x="62" y="24" w="136" h="21" min="0" max="100" decimals="0" dragCmd="VolSlider" releaseCmd="VolSlider" unit="decimal" t="vol" sim="1" l="0">
       <indicator state="0" offsetX="0" offsetY="1" x="0" y="0" w="0" h="0" t="">vol_indicator.png</indicator>
       <indicator state="1" offsetX="0" offsetY="1" zoom="100" />
     </slider>
@@ -361,11 +406,6 @@
     <txt j="100003" x="621" y="0" w="63" h="44" t="item_left_dark" wrap="False" l="0">00:00</txt>
     <img x="502" y="0" w="108" h="44" j="100004" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_5.png</img>
   </subpage>
-  <subpage name="popup_zones" w="296" h="410" clip="1" t="popup_zones">
-    <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
-    <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
-    <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
-  </subpage>
   <subpage name="popup_shuffle" w="389" h="395" clip="1">
     <img x="0" y="0" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_top_arrowleft_bg.png</img>
     <img x="0" y="100" w="389" h="195" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_middle_bg.png</img>
@@ -431,7 +471,7 @@
       <inactive s="0">Repeat PLAYING NOW</inactive>
       <active s="0">Repeat PLAYING NOW</active>
     </btn>
-    <btn j="0" x="50" y="224" w="302" h="46" t="setting_item_last" flip="None" sim="0" l="0" s="1" js="JRiver.player.doMCC(10036, -1)">
+    <btn j="0" x="50" y="224" w="302" h="46" t="setting_item_last" flip="None" sim="0" l="0" s="1" js="JRiver.player.setRepeat(4)">
       <inactive s="0">Stop After Each Item</inactive>
       <active s="0">Stop After Each Item</active>
     </btn>
@@ -463,5 +503,16 @@
       <active s="0">
       </active>
     </btn>
+  </subpage>
+  <subpage name="search" w="192" h="65" clip="1">
+    <img x="1" y="18" w="25" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_left.png</img>
+    <img x="26" y="18" w="149" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_middle.png</img>
+    <img x="175" y="18" w="15" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_right.png</img>
+    <input j="0" s="4" x="29" y="19" w="153" h="28" pass="0" autoFocus="0" f="0" t="search" l="0">Search</input>
+  </subpage>
+  <subpage name="popup_zones" w="296" h="410" clip="1" t="popup_zones">
+    <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
+    <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
+    <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
   </subpage>
 </gui>

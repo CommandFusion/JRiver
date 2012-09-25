@@ -1,4 +1,4 @@
-var posSliderPressed = false;
+var posSliderPressed = false, volSliderPressed = false;
 
 CF.userMain = function() {
 	// Get username, password, authkey from token storage
@@ -13,12 +13,34 @@ CF.userMain = function() {
 	// Also hide the back buttons on startup
 	CF.setProperties([{join: "d1", x: 746},{join: "d9", x: 490},{join: "d2", opacity: 0.0},{join: "d3", opacity: 0.0}]);
 
-	// Listen to position slider press and release events, disable slider updating whilst its being dragged
+	// Listen to volume and position slider press and release events, disable slider updating whilst its being dragged
+	CF.watch(CF.ObjectPressedEvent, "a1", function() {
+		volSliderPressed = true;
+	});
+	CF.watch(CF.ObjectReleasedEvent, "a1", function() {
+		volSliderPressed = false;
+	});
 	CF.watch(CF.ObjectPressedEvent, "a2", function() {
 		posSliderPressed = true;
 	});
 	CF.watch(CF.ObjectReleasedEvent, "a2", function() {
 		posSliderPressed = false;
+	});
+
+	// Watch the speed scroll slider events (the dots next to the main list in the UI)
+	CF.watch(CF.ObjectPressedEvent, "a3", function(j,v) {
+		// Get the list size
+		CF.listInfo("l3", function(list, count, first, numVisible, scrollPosition) {
+			// Scroll to the relavent position based on slider pos
+			CF.listScroll("l3", Math.ceil((count / 65535) * v), CF.MiddlePosition, false);
+		});
+	});
+	CF.watch(CF.ObjectDraggedEvent, "a3", function(j,v) {
+		// Get the list size
+		CF.listInfo("l3", function(list, count, first, numVisible, scrollPosition) {
+			// Scroll to the relavent position based on slider pos
+			CF.listScroll("l3", Math.ceil((count / 65535) * v), CF.MiddlePosition, false);
+		});
 	});
 
 	EventHandler.on(JRiver, 'PlayerDiscovered', function() {
@@ -75,7 +97,7 @@ CF.userMain = function() {
 				{ join: "d123", value: mode == 1 },
 				{ join: "d124", value: mode == 2 },
 				{ join: "d125", value: mode == 3 },
-				{ join: "d126", value: 0 },
+				{ join: "d126", value: mode == 4 },
 				{ join: "d11", value: mode != 1 }
 			]);
 		});
@@ -213,7 +235,7 @@ function ZoneInfoChanged(theZone) {
 }
 
 function ZoneVolumeChanged(theZone) {
-	if (theZone.id == JRiver.player.currentZoneID) {
+	if (theZone.id == JRiver.player.currentZoneID && !volSliderPressed) {
 		CF.setJoin("a1", parseFloat(theZone.info["Volume"], 10) * 65535);
 	}
 }
@@ -226,7 +248,6 @@ function ZonePlaylistChanged(theZone) {
 		var listContent = [];
 		var nowPlayingIndex = 0;
 		for (var i = 0; i < theZone.playlist.length; i++) {
-			CF.logObject(theZone.playlist[i]);
 			listContent.push({
 				"subpage" : "playlist_items",
 				"s100001" : theZone.playlist[i]["Name"],
@@ -244,8 +265,6 @@ function ZonePlaylistChanged(theZone) {
 				nowPlayingIndex = i;
 			}
 		}
-		CF.log("Current Key: " + theZone.info["FileKey"]);
-		CF.logObject(listContent);
 		CF.listAdd("l4", listContent);
 		// Scroll to the current track position
 		setTimeout(function(){ CF.listScroll("l4", nowPlayingIndex, CF.MiddlePosition, false);}, 500);

@@ -235,6 +235,8 @@ var JRiverPlayer = function(params) {
 				var xmlDoc = parser.parseFromString(body, 'text/xml');
 				// Get the data from XML
 				self.authToken = xmlDoc.evaluate("//Item[@Name='Token']", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
+				// Test streaming playback - TODO - THIS WORKS :)
+				//CF.setJoin("s99", "http://192.168.0.10:52199/Gizmo/MCWS/v1/File/GetFile?File=4084&Conversion=WebPlay&Playback=1&Token=" + self.authToken);
 				// Now get list of zones
 				self.getZones();
 				// Start browsing the player library
