@@ -4,14 +4,18 @@ CF.userMain = function() {
 	// Get username, password, authkey from token storage
 	CF.getJoin(CF.GlobalTokensJoin, function (j,v,t) {
 		// "cYDGjk"
-		JRiver.init(t["accessKey"], t["username"], t["password"]);
-		JRiver.trackMode = t["trackmode"];
+		JRiver.init(t["servers"]);
+		JRiver.trackMode = t["trackMode"];
+		setTrackMode(t["trackMode"]);
 	});
 
 	// Move the zone subpage slightly off screen
 	// can't do it at design time because the shadow is too large.
 	// Also hide the back buttons on startup
 	CF.setProperties([{join: "d1", x: 746},{join: "d9", x: 490},{join: "d2", opacity: 0.0},{join: "d3", opacity: 0.0}]);
+
+	// Show the help subpage
+	CF.setJoin("d998", 1);
 
 	// Listen to volume and position slider press and release events, disable slider updating whilst its being dragged
 	CF.watch(CF.ObjectPressedEvent, "a1", function() {
@@ -43,8 +47,60 @@ CF.userMain = function() {
 		});
 	});
 
-	EventHandler.on(JRiver, 'PlayerDiscovered', function() {
-		CF.log("JRiver Player Discovered: " + JRiver.player.ipAddress);
+	// Watch events for change of username and password in settings
+	CF.watch(CF.InputFieldEditedEvent, "s910", function(j,v) {
+		JRiver.configuringServer.username = v;
+	});
+
+	// Watch events for change of username and password in settings
+	CF.watch(CF.InputFieldEditedEvent, "s911", function(j,v) {
+		JRiver.configuringServer.password = v;
+	});
+
+	EventHandler.on(JRiver, 'PlayerDiscovered', function(jr, server) {
+		CF.log("Player Discovered: " + server.IP);
+		CF.listAdd("l999", [
+			{
+				"subpage": "sidebar_listitem_arrow",
+				"s100001": server.NAME,
+				"d100001": {
+					tokens: {
+						"NAME": server.NAME,
+						"IP": server.IP
+					}
+				}
+			}
+		]);
+	});
+
+	EventHandler.on(JRiver, 'ConfigurePlayer', function(jr) {
+		CF.setJoins([
+			{ join: "s910", value: JRiver.configuringServer.username },
+			{ join: "s911", value: JRiver.configuringServer.password },
+			{ join: "s901", value: JRiver.configuringServer.NAME },
+			{ join: "s902", value: JRiver.configuringServer.IP },
+			{ join: "d996", value: 0 }, // Hide the options subpage
+			{ join: "d997", value: 0 }, // Hide the help screenshot subpage
+			{ join: "d998", value: 0 }, // Hide the help subpage
+			{ join: "d999", value: 1 }, // Show the settings subpage
+			{ join: "s999", value: "" } // Clear auth error text
+		]);
+	});
+
+	EventHandler.on(JRiver, 'PlayerSelected', function() {
+		CF.log("JRiver Player Selected: " + JRiver.player.ipAddress);
+
+		// Listen to authorization event for the player
+		EventHandler.on(JRiver.player, 'PlayerAuthorized', function(player, authed) {
+			CF.log("Player Authorized: " + authed);
+			if (authed) {
+				CF.setJoin("s999", "");
+				CF.flipToPage("Player");
+			} else {
+				CF.setJoin("s999", "Authorization Failed! Please check your username and password.\nLeave them blank if authorization is not enabled.\nFor more information, press the back button above.");
+				CF.flipToPage("Settings");
+			}
+		});
 
 		// Listen to zone discovery events for the new player
 		EventHandler.on(JRiver.player, 'ZonesChanged', function() {
@@ -251,7 +307,7 @@ function ZonePlaylistChanged(theZone) {
 			listContent.push({
 				"subpage" : "playlist_items",
 				"s100001" : theZone.playlist[i]["Name"],
-				"s100002" : theZone.playlist[i]["Track #"],
+				"s100002" : (JRiver.trackMode == 0) ? (i + 1) : theZone.playlist[i]["Track #"],
 				"s100003" : ("00"+Math.floor(parseInt(theZone.playlist[i]["Duration"], 10) / 60)).slice(-2) + ":" + ("00"+Math.ceil(parseInt(theZone.playlist[i]["Duration"], 10) % 60)).slice(-2),
 				"s100004" : (theZone.playlist[i]["Rating"]) ? "star_right_" + theZone.playlist[i]["Rating"] + ".png" : "star_right_none.png",
 				"d100001" : {
@@ -308,4 +364,13 @@ function setLastScrollPos(list, listIndex) {
 			browseItem.scrollPos = scrollPosition;
 		}
 	});
+}
+
+function setTrackMode(mode) {
+	CF.setJoins([
+		{ join: "d1001", value: (mode == 0) },
+		{ join: "d1002", value: (mode == 1) }
+	]);
+	JRiver.trackMode = mode;
+	CF.setToken(CF.GlobalTokensJoin, "trackMode", mode);
 }

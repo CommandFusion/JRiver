@@ -188,6 +188,7 @@ var JRiverPlayer = function(params) {
 		},
 		files: [],
 		eventCallbacks: {
+			"PlayerAuthorized" : [],
 			"ZonesChanged" : [],
 			"CurrentZoneChanged" : [],
 			"PlaybackStateChanged" : [],
@@ -235,14 +236,25 @@ var JRiverPlayer = function(params) {
 				var xmlDoc = parser.parseFromString(body, 'text/xml');
 				// Get the data from XML
 				self.authToken = xmlDoc.evaluate("//Item[@Name='Token']", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
+		
 				// Test streaming playback - TODO - THIS WORKS :)
 				//CF.setJoin("s99", "http://192.168.0.10:52199/Gizmo/MCWS/v1/File/GetFile?File=4084&Conversion=WebPlay&Playback=1&Token=" + self.authToken);
-				// Now get list of zones
+
+				// Clear any previously discovered DLNA Zones
+				JRiver.DLNA_Zones = [];
+				// Request all zones (DLNA Media Renderers) - urn:schemas-upnp-org:device:MediaRenderer:1
+				// This is so we can subscribe to each zones DLNA notifications
+				CF.send("DLNA Discovery", "M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\nST:"+JRiver.ST_Zone+"\r\n\r\n");
+
+				// Now get list of zones from JRiver API
 				self.getZones();
 				// Start browsing the player library
 				self.browse();
+				EventHandler.emit(self, "PlayerAuthorized", true);
 			} else {
 				CF.log("JRiver Authentication failed with status " + status + ".");
+				JRiver.configurePlayer(JRiver.selectedServer);
+				EventHandler.emit(self, "PlayerAuthorized", false);
 			}
 		});
 	};
@@ -564,29 +576,29 @@ var JRiverPlayer = function(params) {
 };
 
 var JRiver = {
+	ST_Server: "urn:schemas-upnp-org:device:X-JRiver-Library-Server:1",
+	ST_Zone: "urn:schemas-upnp-org:device:MediaRenderer:1",
 	navSeparator: " > ",
-	accessKey: "", // Get this from JRiver > Tools > Options > Media Network > Tick first box, click second item to generate (or right click to copy the key)
-	username: undefined,
-	password: undefined,
-	lookupAddress: "http://webplay.jriver.com/libraryserver/lookup?id=", // Append accessKey to this URL to find any JRiver media servers publishing their access
+	//lookupAddress: "http://webplay.jriver.com/libraryserver/lookup?id=", // Append accessKey to this URL to find any JRiver media servers publishing their access
 	eventCallbacks: {
 		"PlayerDiscovered" : [],
+		"ZoneDiscovered" : [],
+		"PlayerSelected" : [],
+		"ConfigurePlayer" : [],
 		"GroupsChanged" : [],
 	},
+	servers: [],
+	selectedServer : null,
+	configuringServer: null,
+	DLNA_Zones: [],
+	resubscribeID: null,
+	trackMode: 1, // Defaul to show track numbers as their playlist number
 	player: new JRiverPlayer(),
 
-	init: function(accessKey, username, password) {
+	init: function(servers) {
 		CF.log("JRiver: init()");
 
-		JRiver.accessKey = (accessKey !== undefined) ? accessKey : JRiver.accessKey;
-		JRiver.username = (username !== undefined) ? username : JRiver.username;
-		JRiver.password = (password !== undefined) ? password : JRiver.password;
-
-		if (JRiver.accessKey == "") {
-			CF.log("Please enter your Access Key");
-			return;
-		}
-
+		/*
 		CF.request(JRiver.lookupAddress + JRiver.accessKey, function (status, headers, body) {
 			if (status == 200) {
 				// Read the XML data
@@ -605,8 +617,279 @@ var JRiver = {
 				JRiver.player.getConfiguration();
 			}
 		});
-	}
+*/
 
+		// Listens for DLNA responses from and processes them
+		CF.watch(CF.FeedbackMatchedEvent, "DLNA Discovery", "Discovery Feedback", function(regex, data) {
+
+			//CF.log("DLNA Discovery Feedback:\n" + data);
+			
+			var deviceResponse = {};
+			// Split each line of data
+			var headers = data.split("\r\n");
+			for (var i=0; i<headers.length - 1; i++) {
+				// Split the header name from the data - some responses won't have space after the colon, so we can't rely on that to split the data.
+				// Instead, split it all up using colons then join the data back if there were colons in the actual data.
+				var headerData = headers[i].split(":");
+				// Make sure the line was header data, skip HTTP Response, etc, that only have data (no header name).
+				if (headerData.length>1) {
+					// trim any spaces from the data, and join it all up if it contained colons (which we previously split)
+					deviceResponse[headerData[0].toUpperCase()] = trim(headerData.slice(1).join(":"));
+				}
+			}
+
+			if (deviceResponse["ST"] == JRiver.ST_Server) {
+				//CF.log("FOUND JRIVER SERVER - " + deviceResponse["LOCATION"]);
+				// Now retrieve the device description from it's XML if one was given
+				if (deviceResponse["LOCATION"]) {
+					CF.request(deviceResponse["LOCATION"], function(status, headers, body) {
+						if (status == 200) {
+							// Read the XML data
+							var parser = new DOMParser();
+							var xmlDoc = parser.parseFromString(body, 'text/xml');
+							deviceResponse.NAME = xmlDoc.getElementsByTagName("friendlyName")[0].childNodes[0].nodeValue;
+							deviceResponse.KEY = xmlDoc.getElementsByTagName("accessKey")[0].childNodes[0].nodeValue;
+							deviceResponse.IP = /([0-9]+(?:\.[0-9]+){3})/.exec(deviceResponse["LOCATION"])[1];
+							deviceResponse.PORT = /:([0-9]+)/.exec(deviceResponse["LOCATION"])[1];
+							deviceResponse.username = "";
+							deviceResponse.password = "";
+							if (!JRiver.getPlayerByNameIP(deviceResponse.NAME, deviceResponse.IP)) {
+								JRiver.servers.push(deviceResponse);
+								EventHandler.emit(JRiver, "PlayerDiscovered", deviceResponse);
+							} else {
+								CF.log("Server already discovered or loaded from memory: " + deviceResponse.NAME + " - " + deviceResponse.IP);
+							}
+						} else {
+							CF.log("An error occured requesting the DeviceInfo XML.\nResponse code was '" + status + "'.");
+						}
+					});
+				}
+			} else if (deviceResponse["ST"] == JRiver.ST_Zone) {
+				// Now retrieve the device description from it's XML if one was given
+				if (deviceResponse["LOCATION"]) {
+					CF.request(deviceResponse["LOCATION"], function(status, headers, body) {
+						if (status == 200) {
+							// Read the XML data
+							var parser = new DOMParser();
+							var xmlDoc = parser.parseFromString(body, 'text/xml');
+							deviceResponse.NAME = xmlDoc.getElementsByTagName("friendlyName")[0].childNodes[0].nodeValue;
+							deviceResponse.IP = /([0-9]+(?:\.[0-9]+){3})/.exec(deviceResponse["LOCATION"])[1];
+							deviceResponse.PORT = /:([0-9]+)/.exec(deviceResponse["LOCATION"])[1];
+							if (xmlDoc.getElementsByTagName("modelDescription")[0].childNodes[0].nodeValue == "JRiver DLNA Renderer") {
+								if (!JRiver.getDLNAZoneByLocation(deviceResponse["LOCATION"])) {
+									CF.log("FOUND JRIVER ZONE - " + deviceResponse["NAME"]);
+									// Add zone and subscribe to its notification events
+									JRiver.DLNA_Zones.push(deviceResponse);
+									EventHandler.emit(JRiver, "ZoneDiscovered", deviceResponse);
+									// Subscribe to DLNA Notification Events
+									JRiver.subscribeEvents(deviceResponse);
+								}
+							}							
+						} else {
+							CF.log("An error occured requesting the DeviceInfo XML.\nResponse code was '" + status + "'.");
+						}
+					});
+				}
+			}
+		});
+
+		// Listens for DLNA Notify messages
+		CF.watch(CF.FeedbackMatchedEvent, "DLNA Notification", "Notification Feedback", function (regex, data) {
+			//CF.log("DLNA Notify Feedback:\n" + data);
+
+			// Notifications can come back in multiple packets, so need to make sure the EOM setting in the notifications system is set to:
+			// </e:propertyset>
+
+			// Check if the reply has XML data we are looking for, if not, disregard it
+			if (data.indexOf("<?xml") === -1) return;
+
+			data = trim(data);
+			
+			var deviceResponse = {};
+			// Split each line of header data
+			var headers = data.substring(0, data.indexOf("<?xml")).split("\r\n");
+			deviceResponse["NAME"] = decodeURIComponent(/_(.*?)\s/.exec(headers[0])[1]);
+			for (var i=0; i<headers.length - 1; i++) {
+				// Split the header name from the data - some responses won't have space after the colon, so we can't rely on that to split the data.
+				// Instead, split it all up using colons then join the data back if there were colons in the actual data.
+				var headerData = headers[i].split(":");
+				// Make sure the line was header data, skip HTTP Response, etc, that only have data (no header name).
+				if (headerData.length>1) {
+					// trim any spaces from the data, and join it all up if it contained colons (which we previously split)
+					deviceResponse[headerData[0].toUpperCase()] = trim(headerData.slice(1).join(":"));
+				}
+			}
+			//CF.logObject(deviceResponse);
+			//CF.log("SID for notification: " + deviceResponse["SID"]);
+
+			// Find the DLNA zone the notification was from
+			var theZone = JRiver.getDLNAZoneByName(deviceResponse["NAME"]);
+			if (theZone && !theZone.SID) {
+				theZone.SID = deviceResponse["SID"];
+			}
+
+			var xmlData = data.substring(data.indexOf("<?xml"));
+			var parser = new DOMParser();
+			var xmlDoc = parser.parseFromString(xmlData, 'text/xml');
+			// Get the data from XML
+			//CF.log(xmlDoc.evaluate("//LastChange", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue);
+		});
+
+		// Manage subscriptions when the app is not in use
+		CF.watch(CF.GUISuspendedEvent, JRiver.onGUISuspended);
+		CF.watch(CF.GUIResumedEvent, JRiver.onGUIResumed);
+
+		if (servers != "") {
+			JRiver.servers = JSON.parse(servers);
+			for (var i in JRiver.servers) {
+				EventHandler.emit(JRiver, "PlayerDiscovered", JRiver.servers[i]);
+			}
+		}
+
+		// Send the discovery request
+		JRiver.discoverPlayers();
+	},
+
+	discoverPlayers: function(clearDiscovered) {
+		if (clearDiscovered) {
+			JRiver.servers = [];
+		}
+		setTimeout(function() {
+			// Only want to discover JRiver servers, which are ST: urn:schemas-upnp-org:device:X-JRiver-Library-Server:1
+			CF.send("DLNA Discovery", "M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\nST:"+JRiver.ST_Server+"\r\n\r\n");
+		}, 500);
+	},
+
+	// Select one of the discovered servers, by its index in the servers array
+	selectPlayerByIndex: function(index) {
+		JRiver.selectPlayer(JRiver.servers[index]);
+	},
+
+	selectPlayer: function(server) {
+		if (JRiver.selectedServer !== null) {
+			// Clear timeouts for the notification resubscription
+			clearTimeout(JRiver.resubscribeID);
+			JRiver.resubscribeID = null;
+
+			// Unsubscribe to any notifications from the previous server
+			JRiver.unsubscribeEvents(JRiver.selectedServer);
+		}
+		JRiver.selectedServer = server;
+		// Create the new player object
+		JRiver.player = new JRiverPlayer({ipAddress: server.IP, port: server.PORT, username: server.username, password: server.password});
+		// Let any event listeners know about the new player discovery
+		EventHandler.emit(JRiver, 'PlayerSelected');
+		// Get the configuration details of the discovered player
+		JRiver.player.getConfiguration();
+	},
+
+	subscribeEvents: function(zone) {
+		JRiver.subscribeEvent(zone, "/RenderingControl/event", "RenderControl_" + zone.NAME);
+		JRiver.subscribeEvent(zone, "/AVTransport/event", "TransportEvent_" + zone.NAME);
+		JRiver.resubscribeID = setTimeout(function(zone){JRiver.subscribeEvents(zone)}, 1800 * 1000, zone);
+	},
+
+	unsubscribeEvents: function(zone) {
+		if (!zone) return;
+		for (var i in JRiver.DLNA_Zones) {
+			var theZone = JRiver.DLNA_Zones[i];
+			if (theZone.SID) {
+				CF.log("UNSUBSCRIBING: " + theZone.NAME);
+				JRiver.subscribeEvent(theZone, "/RenderingControl/event", null, theZone.SID);
+				JRiver.subscribeEvent(theZone, "/AVTransport/event", null, theZone.SID);
+			}
+		}
+		
+	},
+
+	subscribeEvent: function(server, path, subURL, SID) {
+		var headers = {
+			"Cache-Control" : "no-cache",
+			"Pragma" : "no-cache",
+			"USER-AGENT" : "iOS UPnP/1.1 iViewer4",
+			"TIMEOUT" : "Second-1800"
+		};
+		if (!SID) {
+			headers["CALLBACK"] = "<http://" + CF.ipv4address + ":" + CF.systems["DLNA Notification"].port + "/" + subURL + ">";
+			headers["NT"] = "upnp:event";
+		} else {
+			headers["SID"] = SID;
+		}
+		if (server.username && server.password) {
+			headers["Authorization"] = "Basic " + btoa(server.username + ":" + server.password);
+		}
+		CF.request("http://" + server.IP + ":" + server.PORT + path , "SUBSCRIBE", headers, function (status, headers, body) {
+			if (status == 200) {
+				server.SID = headers.SID;
+			} else {
+				CF.log("An error occured performing a SUBSCRIBE request.\nResponse code was '" + status + "'.");
+			}
+		});
+	},
+
+	// Configure one of the discovered servers, by its index in the servers array
+	configurePlayerByIndex: function(index) {
+		JRiver.configuringServer = JRiver.servers[index];
+		if (JRiver.configuringServer) {
+			// Emit event to setup the UI for configuration of the selected server
+			EventHandler.emit(JRiver, 'ConfigurePlayer');
+		} else {
+			CF.log("Player could not be selected by index: " + index);
+		}
+	},
+
+	configurePlayer: function(player) {
+		JRiver.configuringServer = player;
+		// Emit event to setup the UI for configuration of the selected server
+		EventHandler.emit(JRiver, 'ConfigurePlayer');	
+	},
+
+	selectConfiguredPlayer: function() {
+		JRiver.selectPlayer(JRiver.configuringServer);
+	},
+
+	getPlayerByNameIP: function(name, ip) {
+		for (var i in JRiver.servers) {
+			if (JRiver.servers[i].NAME == name && JRiver.servers[i].IP == ip) {
+				return JRiver.servers[i];
+			}
+		}
+		return null;
+	},
+
+	getDLNAZoneByLocation: function(location) {
+		for (var zone in JRiver.DLNA_Zones) {
+			if (JRiver.DLNA_Zones[zone].LOCATION == location) {
+				return JRiver.DLNA_Zones[zone];
+			}
+		}
+		return null;
+	},
+
+	getDLNAZoneByName: function(name) {
+		for (var zone in JRiver.DLNA_Zones) {
+			if (JRiver.DLNA_Zones[zone].NAME == name) {
+				return JRiver.DLNA_Zones[zone];
+			}
+		}
+		return null;
+	},
+
+	onGUISuspended: function() {
+		// Even though the call is not executed immediately, it is enqueued for later processing:
+		// the displayed date will be the one generated by the time the app was suspended
+		CF.log("GUI suspended at " + (new Date()));
+		// Unsubscribe to any notifications from the previous server
+		JRiver.unsubscribeEvents(JRiver.selectedServer);
+
+		// Save connection details
+		CF.setToken(CF.GlobalTokensJoin, "servers", JSON.stringify(JRiver.servers));
+	},
+
+	onGUIResumed: function() {
+		// Show the time at which the GUI was put back to front
+		CF.log("GUI resumed at " + (new Date()));
+	}
 };
 
 CF.modules.push({
@@ -614,3 +897,11 @@ CF.modules.push({
 	object: JRiver,	// the object to which the setup function belongs ("this")
 	version: 1.0	// An optional module version number that is displayed in the Remote Debugger
 });
+
+function trim (str) {
+	var	str = str.replace(/^\s\s*/, ''),
+		ws = /\s/,
+		i = str.length;
+	while (ws.test(str.charAt(--i)));
+	return str.slice(0, i + 1);
+}
