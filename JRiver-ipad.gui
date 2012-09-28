@@ -41,9 +41,6 @@
     <system name="DLNA Notification" ip="0.0.0.0" port="3400" protocol="tcp" alwayson="1" offlinequeue="1" accept="1" acceptBroadcasts="0" ssl="0" maxconnections="100" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="&lt;/e:propertyset&gt;" connectionStatus="0" disconnectionStatus="0">
       <fb name="Notification Feedback" regex="." />
     </system>
-    <system name="DLNA Subscription" ip="192.168.0.11" origin="45501" port="1400" protocol="tcp" alwayson="1" offlinequeue="1" accept="0" acceptBroadcasts="0" ssl="0" maxconnections="0" heartbeatRx="" heartbeatTx="" heartbeatMode="-1" eom="" connectionStatus="0" disconnectionStatus="0">
-      <fb name="Subscription Feedback" regex="." />
-    </system>
   </systems>
   <themes>
     <theme type="button" name=".newtheme_1[state='0']"><![CDATA[padding: 0px 0px 0px 0px;  filter: Alpha(Opacity=100); -moz-opacity:1; opacity: 1; background-color: Green; color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
@@ -385,25 +382,12 @@
     </txt>
     <txt j="100004" x="565" y="145" w="183" h="31" t="sidebar_subtitle" wrap="False" l="0">
     </txt>
-    <btn j="100001" x="29" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
-      <inactive s="0">
-      </inactive>
-      <active s="0">
-      </active>
-    </btn>
-    <btn j="100002" x="212" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
-      <inactive s="0">
-      </inactive>
-      <active s="0">
-      </active>
-    </btn>
-    <btn j="100003" x="395" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
-      <inactive s="0">
-      </inactive>
-      <active s="0">
-      </active>
-    </btn>
-    <btn j="100004" x="578" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);">
+    <btn j="100001" x="29" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
+      <actions>
+        <action>
+          <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
+        </action>
+      </actions>
       <inactive s="0">
       </inactive>
       <active s="0">
@@ -413,6 +397,39 @@
     <img x="223" y="11" w="135" h="135" j="100012" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
     <img x="406" y="11" w="135" h="135" j="100013" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
     <img x="589" y="11" w="135" h="135" j="100014" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <btn j="100002" x="212" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
+      <actions>
+        <action>
+          <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
+        </action>
+      </actions>
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="100003" x="395" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
+      <actions>
+        <action>
+          <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
+        </action>
+      </actions>
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <btn j="100004" x="578" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
+      <actions>
+        <action>
+          <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
+        </action>
+      </actions>
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
   </subpage>
   <subpage name="track_items" w="764" h="44" clip="1">
     <txt j="100001" x="14" y="0" w="750" h="44" t="title_left" wrap="False" l="0">Text</txt>
