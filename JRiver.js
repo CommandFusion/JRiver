@@ -41,6 +41,24 @@ var EventHandler = {
 			// Add to the array
 			obj.eventCallbacks[type].push(listener);
 		}
+	},
+
+	clear: function(obj, type) {
+		if (!type) {
+			// Clear all events for this object
+			for (var type in obj.eventCallbacks) {
+				EventHandler.clear(obj, type);
+			}
+
+		} else {
+			// Clear all listeners for specific object and event type
+			if (!obj.eventCallbacks[type]) {
+				CF.log("Attempted clear of undefined event - '" + type + "'.");
+				return false;
+			}
+
+			obj.eventCallbacks[type] = [];
+		}
 	}
 };
 
@@ -64,7 +82,8 @@ var JRiverZone = function(params) {
 	self.init = function() {
 		// Start polling the zone for its status info
 		self.getInfo();
-		self.pollingID = setInterval(self.getInfo, self.pollingRate);
+		// TODO - DISABLE POLLING ONCE DLNA NOTIFICATIONS ARE WORKING!
+		//self.pollingID = setInterval(self.getInfo, self.pollingRate);
 	};
 
 	self.stopPolling = function() {
@@ -167,7 +186,8 @@ var JRiverPlayer = function(params) {
 	params = params || {};
 
 	var self = {
-		authToken: null,
+		authToken: "",
+		auth: false,
 		username: params.username,
 		password: params.password,
 		ipAddress: params.ipAddress || null,
@@ -236,6 +256,7 @@ var JRiverPlayer = function(params) {
 				var xmlDoc = parser.parseFromString(body, 'text/xml');
 				// Get the data from XML
 				self.authToken = xmlDoc.evaluate("//Item[@Name='Token']", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue;
+				self.auth = true;
 		
 				// Test streaming playback - TODO - THIS WORKS :)
 				//CF.setJoin("s99", "http://192.168.0.10:52199/Gizmo/MCWS/v1/File/GetFile?File=4084&Conversion=WebPlay&Playback=1&Token=" + self.authToken);
@@ -253,6 +274,7 @@ var JRiverPlayer = function(params) {
 				EventHandler.emit(self, "PlayerAuthorized", true);
 			} else {
 				CF.log("JRiver Authentication failed with status " + status + ".");
+				self.auth = false;
 				JRiver.configurePlayer(JRiver.selectedServer);
 				EventHandler.emit(self, "PlayerAuthorized", false);
 			}
@@ -260,7 +282,10 @@ var JRiverPlayer = function(params) {
 	};
 
 	self.getZones = function() {
+		// Get list of zones for the player
 		CF.request(self.webServiceURL + "Playback/Zones?Token=" + self.authToken, function (status, headers, body) {
+			// Clear zones array
+			self.zones = [];
 			if (status == 200) {
 				var parser = new DOMParser();
 				var xmlDoc = parser.parseFromString(body, 'text/xml');
@@ -579,12 +604,19 @@ var JRiver = {
 	ST_Server: "urn:schemas-upnp-org:device:X-JRiver-Library-Server:1",
 	ST_Zone: "urn:schemas-upnp-org:device:MediaRenderer:1",
 	navSeparator: " > ",
+	settings: {
+		trackMode: 0,
+		selectionMode: 0,
+		disableSleep: 0,
+		volumeButtons: 0,
+	},
 	//lookupAddress: "http://webplay.jriver.com/libraryserver/lookup?id=", // Append accessKey to this URL to find any JRiver media servers publishing their access
 	eventCallbacks: {
 		"PlayerDiscovered" : [],
 		"ZoneDiscovered" : [],
 		"PlayerSelected" : [],
 		"ConfigurePlayer" : [],
+		"SettingsChanged" : [],
 		"GroupsChanged" : [],
 	},
 	servers: [],
@@ -592,11 +624,12 @@ var JRiver = {
 	configuringServer: null,
 	DLNA_Zones: [],
 	resubscribeID: null,
+	subscriptions: [],
 	trackMode: 1, // Defaul to show track numbers as their playlist number
 	player: new JRiverPlayer(),
 
 	init: function(servers) {
-		CF.log("JRiver: init()");
+		//CF.log("JRiver: init()");
 
 		/*
 		CF.request(JRiver.lookupAddress + JRiver.accessKey, function (status, headers, body) {
@@ -675,9 +708,10 @@ var JRiver = {
 							deviceResponse.NAME = xmlDoc.getElementsByTagName("friendlyName")[0].childNodes[0].nodeValue;
 							deviceResponse.IP = /([0-9]+(?:\.[0-9]+){3})/.exec(deviceResponse["LOCATION"])[1];
 							deviceResponse.PORT = /:([0-9]+)/.exec(deviceResponse["LOCATION"])[1];
+							deviceResponse.SID = {};
 							if (xmlDoc.getElementsByTagName("modelDescription")[0].childNodes[0].nodeValue == "JRiver DLNA Renderer") {
 								if (!JRiver.getDLNAZoneByLocation(deviceResponse["LOCATION"])) {
-									CF.log("FOUND JRIVER ZONE - " + deviceResponse["NAME"]);
+									//CF.log("FOUND JRIVER ZONE - " + deviceResponse["NAME"]);
 									// Add zone and subscribe to its notification events
 									JRiver.DLNA_Zones.push(deviceResponse);
 									EventHandler.emit(JRiver, "ZoneDiscovered", deviceResponse);
@@ -692,6 +726,13 @@ var JRiver = {
 				}
 			}
 		});
+
+		/*
+		THE FOLLOWING CODE WAS USED TO LISTEN TO DLNA NOTIFICATIONS FROM JRIVER, WHICH WAS DEEMED NOT USEFUL FOR THIS APPLICATION
+		The reason being that the notifications did not contain the data that the MCWS API was lacking, so was unecessary.
+		The DLNA notification data was actually less useful than polling MCWS once a second...
+		No "now playing" queue modification notifications (ie. zero notification when a song is added to the current playlist)
+		*/
 
 		// Listens for DLNA Notify messages
 		CF.watch(CF.FeedbackMatchedEvent, "DLNA Notification", "Notification Feedback", function (regex, data) {
@@ -719,20 +760,27 @@ var JRiver = {
 					deviceResponse[headerData[0].toUpperCase()] = trim(headerData.slice(1).join(":"));
 				}
 			}
-			//CF.logObject(deviceResponse);
-			//CF.log("SID for notification: " + deviceResponse["SID"]);
+			if (!JRiver.getDLNAZoneBySID(deviceResponse["SID"])) {
+				CF.log("Event Notification IGNORED '" + deviceResponse["NAME"] + "': " + deviceResponse["SID"]);
+				return;
+			} else {
+				// Find the DLNA zone the notification was from
+				var theZone = JRiver.getDLNAZoneByName(deviceResponse["NAME"]);
+				// Set the SID for the event notification
+				if (theZone && !theZone.SID) {
+					theZone.SID = deviceResponse["SID"];
+				}
 
-			// Find the DLNA zone the notification was from
-			var theZone = JRiver.getDLNAZoneByName(deviceResponse["NAME"]);
-			if (theZone && !theZone.SID) {
-				theZone.SID = deviceResponse["SID"];
+				var xmlData = data.substring(data.indexOf("<?xml"));
+				var parser = new DOMParser();
+				var xmlDoc = parser.parseFromString(xmlData, 'text/xml');
+				// Get the data from XML
+				parser = new DOMParser();
+				xmlDoc = parser.parseFromString(xmlDoc.evaluate("//LastChange", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue, 'text/xml');
+				var s = new XMLSerializer();
+				var str = s.serializeToString(xmlDoc);
+				CF.log(str);
 			}
-
-			var xmlData = data.substring(data.indexOf("<?xml"));
-			var parser = new DOMParser();
-			var xmlDoc = parser.parseFromString(xmlData, 'text/xml');
-			// Get the data from XML
-			//CF.log(xmlDoc.evaluate("//LastChange", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue);
 		});
 
 		// Manage subscriptions when the app is not in use
@@ -742,7 +790,11 @@ var JRiver = {
 		if (servers != "") {
 			JRiver.servers = JSON.parse(servers);
 			for (var i in JRiver.servers) {
+				JRiver.servers[i].auth = false;
 				EventHandler.emit(JRiver, "PlayerDiscovered", JRiver.servers[i]);
+				if (JRiver.servers[i].selected) {
+					JRiver.selectPlayer(JRover.servers[i]);
+				}
 			}
 		}
 
@@ -766,19 +818,28 @@ var JRiver = {
 	},
 
 	selectPlayer: function(server) {
-		if (JRiver.selectedServer !== null) {
-			// Clear timeouts for the notification resubscription
-			clearTimeout(JRiver.resubscribeID);
-			JRiver.resubscribeID = null;
+		// Unsubscribe to any notifications from the previous player
+		JRiver.unsubscribeEvents();
 
-			// Unsubscribe to any notifications from the previous server
-			JRiver.unsubscribeEvents(JRiver.selectedServer);
+		// Only create a new player object if the previous player object was different
+		if (JRiver.player.ipAddress != server.IP || JRiver.player.port != server.PORT || !JRiver.player.auth) {
+			if (JRiver.selectedServer !== null) {
+				// Clear timeouts for the notification resubscription
+				clearTimeout(JRiver.resubscribeID);
+				JRiver.resubscribeID = null;
+
+				// Mark the player as not selected
+				JRiver.selectedServer.selected = false;
+			}
+			JRiver.selectedServer = server;
+			JRiver.selectedServer.selected = true;
+			// Clear event listeners for previously selected player
+			EventHandler.clear(JRiver.player);
+			// Create the new player object
+			JRiver.player = new JRiverPlayer({ipAddress: server.IP, port: server.PORT, username: server.username, password: server.password});
+			// Let any event listeners know about the new player discovery
+			EventHandler.emit(JRiver, 'PlayerSelected');
 		}
-		JRiver.selectedServer = server;
-		// Create the new player object
-		JRiver.player = new JRiverPlayer({ipAddress: server.IP, port: server.PORT, username: server.username, password: server.password});
-		// Let any event listeners know about the new player discovery
-		EventHandler.emit(JRiver, 'PlayerSelected');
 		// Get the configuration details of the discovered player
 		JRiver.player.getConfiguration();
 	},
@@ -789,38 +850,38 @@ var JRiver = {
 		JRiver.resubscribeID = setTimeout(function(zone){JRiver.subscribeEvents(zone)}, 1800 * 1000, zone);
 	},
 
-	unsubscribeEvents: function(zone) {
-		if (!zone) return;
+	unsubscribeEvents: function() {
 		for (var i in JRiver.DLNA_Zones) {
 			var theZone = JRiver.DLNA_Zones[i];
-			if (theZone.SID) {
-				CF.log("UNSUBSCRIBING: " + theZone.NAME);
-				JRiver.subscribeEvent(theZone, "/RenderingControl/event", null, theZone.SID);
-				JRiver.subscribeEvent(theZone, "/AVTransport/event", null, theZone.SID);
+			for (var path in theZone.SID) {
+				CF.log("UNSUBSCRIBING: " + theZone.NAME + ", path: " + path + ", SID: " + theZone.SID[path]);
+				JRiver.subscribeEvent(theZone, path, null, theZone.SID[path]);
 			}
-		}
-		
+		}		
 	},
 
-	subscribeEvent: function(server, path, subURL, SID) {
+	subscribeEvent: function(zone, path, subURL, SID) {
 		var headers = {
 			"Cache-Control" : "no-cache",
 			"Pragma" : "no-cache",
 			"USER-AGENT" : "iOS UPnP/1.1 iViewer4",
 			"TIMEOUT" : "Second-1800"
 		};
+		var method;
 		if (!SID) {
+			method = "SUBSCRIBE";
 			headers["CALLBACK"] = "<http://" + CF.ipv4address + ":" + CF.systems["DLNA Notification"].port + "/" + subURL + ">";
 			headers["NT"] = "upnp:event";
 		} else {
+			method = "UNSUBSCRIBE";
 			headers["SID"] = SID;
 		}
-		if (server.username && server.password) {
-			headers["Authorization"] = "Basic " + btoa(server.username + ":" + server.password);
+		if (zone.username && zone.password) {
+			headers["Authorization"] = "Basic " + btoa(zone.username + ":" + zone.password);
 		}
-		CF.request("http://" + server.IP + ":" + server.PORT + path , "SUBSCRIBE", headers, function (status, headers, body) {
+		CF.request("http://" + zone.IP + ":" + zone.PORT + path , method, headers, function (status, headers, body) {
 			if (status == 200) {
-				server.SID = headers.SID;
+				zone.SID[path] = headers.SID;
 			} else {
 				CF.log("An error occured performing a SUBSCRIBE request.\nResponse code was '" + status + "'.");
 			}
@@ -875,6 +936,18 @@ var JRiver = {
 		return null;
 	},
 
+	getDLNAZoneBySID: function(sid) {
+		for (var zone in JRiver.DLNA_Zones) {
+			var theZone = JRiver.DLNA_Zones[zone];
+			for (var path in theZone.SID) {
+				if (theZone.SID[path] == sid)  {
+					return theZone;
+				}
+			}
+		}
+		return null;
+	},
+
 	onGUISuspended: function() {
 		// Even though the call is not executed immediately, it is enqueued for later processing:
 		// the displayed date will be the one generated by the time the app was suspended
@@ -889,6 +962,16 @@ var JRiver = {
 	onGUIResumed: function() {
 		// Show the time at which the GUI was put back to front
 		CF.log("GUI resumed at " + (new Date()));
+	},
+
+	setTrackMode: function(mode) {
+		JRiver.settings.trackMode = mode;
+		EventHandler.emit(JRiver, "SettingsChanged");
+	},
+
+	setSelectionMode: function(mode) {
+		JRiver.settings.selectionMode = mode;
+		EventHandler.emit(JRiver, "SettingsChanged");
 	}
 };
 

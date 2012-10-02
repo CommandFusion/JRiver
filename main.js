@@ -5,8 +5,10 @@ CF.userMain = function() {
 	CF.getJoin(CF.GlobalTokensJoin, function (j,v,t) {
 		// "cYDGjk"
 		JRiver.init(t["servers"]);
-		JRiver.trackMode = t["trackMode"];
-		setTrackMode(t["trackMode"]);
+		if (t["settings"] != "") {
+			JRiver.settings = JSON.parse(t["settings"]);
+		}
+		updateSettingsUI();
 	});
 
 	// Move the zone subpage slightly off screen
@@ -58,7 +60,7 @@ CF.userMain = function() {
 	});
 
 	EventHandler.on(JRiver, 'PlayerDiscovered', function(jr, server) {
-		CF.log("Player Discovered: " + server.IP);
+		//CF.log("Player Discovered: " + server.IP);
 		CF.listAdd("l999", [
 			{
 				"subpage": "sidebar_listitem_arrow",
@@ -73,7 +75,10 @@ CF.userMain = function() {
 		]);
 	});
 
-	EventHandler.on(JRiver, 'ConfigurePlayer', function(jr) {
+	// Watch the settings changed event and update the settings UI when notified
+	EventHandler.on(JRiver, 'SettingsChanged', updateSettingsUI);
+
+	EventHandler.on(JRiver, 'ConfigurePlayer', function() {
 		CF.setJoins([
 			{ join: "s910", value: JRiver.configuringServer.username },
 			{ join: "s911", value: JRiver.configuringServer.password },
@@ -88,7 +93,7 @@ CF.userMain = function() {
 	});
 
 	EventHandler.on(JRiver, 'PlayerSelected', function() {
-		CF.log("JRiver Player Selected: " + JRiver.player.ipAddress);
+		//CF.log("JRiver Player Selected: " + JRiver.player.ipAddress);
 
 		// Listen to authorization event for the player
 		EventHandler.on(JRiver.player, 'PlayerAuthorized', function(player, authed) {
@@ -228,7 +233,7 @@ CF.userMain = function() {
 			if (browseItem.depth == 0) {
 				// Hide the list back button
 				CF.setProperties({join: "d2", opacity: 0});
-			} else {
+			} else if (browseItem.depth == 1) {
 				// Show the list back button
 				CF.setProperties({join: "d2", opacity: 1});
 			}
@@ -307,9 +312,11 @@ function ZonePlaylistChanged(theZone) {
 			listContent.push({
 				"subpage" : "playlist_items",
 				"s100001" : theZone.playlist[i]["Name"],
-				"s100002" : (JRiver.trackMode == 0) ? (i + 1) : theZone.playlist[i]["Track #"],
+				"s100002" : theZone.playlist[i]["Artist"],
 				"s100003" : ("00"+Math.floor(parseInt(theZone.playlist[i]["Duration"], 10) / 60)).slice(-2) + ":" + ("00"+Math.ceil(parseInt(theZone.playlist[i]["Duration"], 10) % 60)).slice(-2),
-				"s100004" : (theZone.playlist[i]["Rating"]) ? "star_right_" + theZone.playlist[i]["Rating"] + ".png" : "star_right_none.png",
+				"s100004" : (JRiver.settings.trackMode == 0) ? (i + 1) : theZone.playlist[i]["Track #"],
+				"s100005" : (theZone.playlist[i]["Rating"]) ? "star_right_" + theZone.playlist[i]["Rating"] + ".png" : "star_right_none.png",
+				"s100006" : JRiver.player.webServiceURL + "File/GetImage?File=" + theZone.playlist[i]["Key"] + "&Token=" + JRiver.player.authToken + "&format=png&width=44&height=44",
 				"d100001" : {
 					tokens: {
 						"key": theZone.playlist[i]["Key"]
@@ -327,9 +334,17 @@ function ZonePlaylistChanged(theZone) {
 	}
 };
 
+function showPopup(join) {
+	CF.setJoins([
+		{join: join, value: 1},
+		{join: "d999999", value: 1}
+	]);
+}
+
 function cancelPopups() {
 	CF.setJoins([
 		{join: "d1", value: 0},
+		{join: "d6", value: 0},
 		{join: "d7", value: 0},
 		{join: "d8", value: 0},
 		{join: "d9", value: 0},
@@ -366,11 +381,29 @@ function setLastScrollPos(list, listIndex) {
 	});
 }
 
-function setTrackMode(mode) {
+function updateSettingsUI() {
+	var selectionMode;
+	switch(JRiver.settings.selectionMode) {
+		case 1 :
+			selectionMode = "Play Immediately and Clear Playlist";
+			break;
+		case 2 :
+			selectionMode = "Play Next";
+			break;
+		case 3 :
+			selectionMode = "Append to Playlist";
+			break;
+		default :
+			selectionMode = "Play Immediately";
+			break;
+	}
 	CF.setJoins([
-		{ join: "d1001", value: (mode == 0) },
-		{ join: "d1002", value: (mode == 1) }
+		{ join: "d1001", value: (JRiver.settings.trackMode == 0) },
+		{ join: "d1002", value: (JRiver.settings.trackMode == 1) },
+		{ join: "s1003", value:  selectionMode}
 	]);
-	JRiver.trackMode = mode;
-	CF.setToken(CF.GlobalTokensJoin, "trackMode", mode);
+
+	CF.setToken(CF.GlobalTokensJoin, "settings", JSON.stringify(JRiver.settings));
+
+	cancelPopups();
 }
