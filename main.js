@@ -271,20 +271,44 @@ function BrowseChanged(player, browseItem, query) {
 		var i = 0;
 		for (item in browseItem.items) {
 			if (!query || (browseItem.items[item].title.toLowerCase().indexOf(query.toLowerCase()) >= 0)) {
-				lineItem = (i % 4) + 1;
-				listRow["s10000" + lineItem] = browseItem.items[item].title;
-				listRow["s10001" + lineItem] = player.webServiceURL + "Browse/Image?Token=" + player.authToken + "&id=" + browseItem.items[item].id + "&format=png&width=135&height=135&";
-				listRow["s10002" + lineItem] = "coverart_blank.png";
-				listRow["d10000" + lineItem] = {
-					tokens: {
-						"browseid": browseItem.items[item].id
+				if (JRiver.settings.viewMode == 0) { // View cover art tiles
+					lineItem = (i % 4) + 1;
+					listRow["s10000" + lineItem] = browseItem.items[item].title;
+					listRow["s10001" + lineItem] = player.webServiceURL + "Browse/Image?Token=" + player.authToken + "&id=" + browseItem.items[item].id + "&format=png&width=135&height=135&";
+					listRow["s10002" + lineItem] = "coverart_blank.png";
+					listRow["d10000" + lineItem] = {
+						tokens: {
+							"browseid": browseItem.items[item].id
+						}
+					};
+					if (lineItem == 4) {
+						listContent.push(listRow);
+						listRow = {};
 					}
-				};
-				if (lineItem == 4) {
-					listContent.push(listRow);
-					listRow = {};
+					i++;
+				} else if (JRiver.settings.viewMode == 1) { // View in grouped list
+					listContent.push({
+						"subpage" : "list_item_coverart1",
+						"s100001" : browseItem.items[item].title,
+						"s100002" : player.webServiceURL + "Browse/Image?Token=" + player.authToken + "&id=" + browseItem.items[item].id + "&format=png&width=80&height=80&",
+						"s100003" : browseItem.title,
+						"d100001" : {
+							tokens: {
+								"browseid": browseItem.items[item].id
+							}
+						}
+					});
+				} else if (JRiver.settings.viewMode == 2) { // View in detailed list
+					listContent.push({
+						"subpage" : "list_item_detail",
+						"s100001" : browseItem.items[item].title,
+						"d100001" : {
+							tokens: {
+								"browseid": browseItem.items[item].id
+							}
+						}
+					});
 				}
-				i++;
 			}
 		}
 		if (listRow.hasOwnProperty("s100001")) {
@@ -467,7 +491,10 @@ function updateSettingsUI() {
 	CF.setJoins([
 		{ join: "d1001", value: (JRiver.settings.trackMode == 0) },
 		{ join: "d1002", value: (JRiver.settings.trackMode == 1) },
-		{ join: "s1003", value:  selectionMode}
+		{ join: "s1003", value:  selectionMode},
+		{ join: "d1600", value: (JRiver.settings.viewMode == 0) },
+		{ join: "d1601", value: (JRiver.settings.viewMode == 1) },
+		{ join: "d1602", value: (JRiver.settings.viewMode == 2) }
 	]);
 
 	CF.setToken(CF.GlobalTokensJoin, "settings", JSON.stringify(JRiver.settings));

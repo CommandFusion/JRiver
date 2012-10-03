@@ -770,6 +770,7 @@ var JRiver = {
 		selectionMode: 0,
 		disableSleep: 0,
 		volumeButtons: 0,
+		viewMode: 0,
 	},
 	//lookupAddress: "http://webplay.jriver.com/libraryserver/lookup?id=", // Append accessKey to this URL to find any JRiver media servers publishing their access
 	eventCallbacks: {
@@ -966,6 +967,12 @@ var JRiver = {
 	setSelectionMode: function(mode) {
 		JRiver.settings.selectionMode = mode;
 		EventHandler.emit(JRiver, "SettingsChanged");
+	},
+
+	setViewMode: function(mode) {
+		JRiver.settings.viewMode = mode;
+		EventHandler.emit(JRiver, "SettingsChanged");
+		EventHandler.emit(JRiver.player, "BrowseChanged", JRiver.player.getBrowseItemByID(JRiver.player.currentBrowseID));
 	}
 };
 

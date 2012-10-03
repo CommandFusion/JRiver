@@ -246,7 +246,7 @@
         <active s="0">
         </active>
       </btn>
-      <list j="3" x="260" y="130" w="764" h="638" headerSub="" titleSub="" contentSub="coverart_listitems4" footerSub="" orientation="v" l="0" swipedelete="0" />
+      <list j="3" x="260" y="130" w="764" h="638" headerSub="" titleSub="" contentSub="list_item_coverart4" footerSub="" orientation="v" l="0" swipedelete="0" />
       <btn j="3" x="260" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browseBack();">
         <inactive s="0">back</inactive>
         <active s="0">back</active>
@@ -259,7 +259,7 @@
       </btn>
       <subpage name="popup_zones" x="728" y="69" j="1" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
       <subpage name="search" x="594" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
-      <btn j="0" x="857" y="85" w="40" h="43" t="btn_group_left" flip="None" sim="1" l="0" s="0">
+      <btn j="1602" x="857" y="85" w="40" h="43" t="btn_group_left" flip="None" sim="0" l="0" s="0" js="JRiver.setViewMode(2);">
         <inactive s="0">
           <img x="1" y="0" w="38" h="43">overlay_liststyle_details_off.png</img>
         </inactive>
@@ -267,7 +267,7 @@
           <img x="1" y="0" w="38" h="43">overlay_liststyle_details_on.png</img>
         </active>
       </btn>
-      <btn j="0" x="897" y="85" w="38" h="43" t="btn_group_middle" flip="None" sim="1" l="0" s="0">
+      <btn j="1601" x="897" y="85" w="38" h="43" t="btn_group_middle" flip="None" sim="0" l="0" s="0" js="JRiver.setViewMode(1);">
         <inactive s="0">
           <img x="-1" y="0" w="40" h="43">overlay_liststyle_group_off.png</img>
         </inactive>
@@ -275,7 +275,7 @@
           <img x="-1" y="0" w="40" h="43">overlay_liststyle_group_on.png</img>
         </active>
       </btn>
-      <btn j="0" x="935" y="85" w="40" h="43" t="btn_group_right" flip="None" sim="1" l="0" s="0">
+      <btn j="1600" x="935" y="85" w="40" h="43" t="btn_group_right" flip="None" sim="0" l="0" s="0" js="JRiver.setViewMode(0);">
         <inactive s="0">
           <img x="-2" y="0" w="40" h="43">overlay_liststyle_art_off.png</img>
         </inactive>
@@ -393,7 +393,7 @@
       </active>
     </btn>
   </subpage>
-  <subpage name="coverart_listitems4" w="764" h="176" clip="1">
+  <subpage name="list_item_coverart4" w="764" h="176" clip="1">
     <img x="29" y="0" w="157" h="157" j="100021" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
     <img x="212" y="0" w="157" h="157" j="100022" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
     <img x="395" y="0" w="157" h="157" j="100023" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
@@ -767,16 +767,16 @@
     <img x="0" y="100" w="389" h="91" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_middle_bg.png</img>
     <img x="0" y="191" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_bottom_bg.png</img>
     <btn j="0" x="41" y="18" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(0);cancelPopups();">
-      <inactive s="0">Play Immediately</inactive>
-      <active s="0">Play Immediately</active>
+      <inactive s="0">Play Now</inactive>
+      <active s="0">Play Now</active>
     </btn>
     <btn j="0" x="41" y="66" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(1);cancelPopups();">
-      <inactive s="0">Play Immediately and Clear</inactive>
-      <active s="0">Play Immediately and Clear</active>
+      <inactive s="0">Play Now and Clear Playlist</inactive>
+      <active s="0">Play Now and Clear Playlist</active>
     </btn>
     <btn j="0" x="41" y="162" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(3);cancelPopups();">
-      <inactive s="0">Append to Playlist</inactive>
-      <active s="0">Append to Playlist</active>
+      <inactive s="0">Add to End</inactive>
+      <active s="0">Add to End</active>
     </btn>
     <btn j="0" x="41" y="114" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(2);cancelPopups();">
       <inactive s="0">Play Next</inactive>
@@ -785,6 +785,40 @@
     <btn j="0" x="41" y="210" w="320" h="43" t="setting_button_red" flip="None" sim="1" l="0" s="1" js="cancelPopups();">
       <inactive s="0">Cancel</inactive>
       <active s="0">Cancel</active>
+    </btn>
+  </subpage>
+  <subpage name="list_item_coverart1" w="764" h="100" clip="1">
+    <img x="0" y="0" w="100" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank_small.png</img>
+    <btn j="100001" x="0" y="10" w="763" h="80" t="blank" flip="None" sim="0" l="0" s="1">
+      <actions>
+        <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(tokens[&quot;browseid&quot;]);" />
+          <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
+        </action>
+      </actions>
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <img x="11" y="10" w="80" h="80" j="100002" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
+    <txt j="100003" x="109" y="48" w="642" h="42" t="setting_content" wrap="True" l="0">
+    </txt>
+    <txt j="100001" x="109" y="9" w="642" h="42" t="sidebar_item" wrap="True" l="0">
+    </txt>
+  </subpage>
+  <subpage name="list_item_detail" w="764" h="46" clip="1">
+    <btn j="100001" x="7" y="0" w="722" h="46" t="setting_item_middle" flip="None" sim="1" l="0" s="1">
+      <actions>
+        <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(tokens[&quot;browseid&quot;]);" />
+          <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
+        </action>
+      </actions>
+      <inactive s="100001">
+      </inactive>
+      <active s="100001">
+      </active>
     </btn>
   </subpage>
 </gui>
