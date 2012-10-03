@@ -72,18 +72,20 @@ var JRiverZone = function(params) {
 		pollingID: null,
 		info: {},
 		playlist: [],
+		nowPlayingIndex: 0,
 		eventCallbacks: {
 			"InfoChanged" : [],
 			"VolumeChanged" : [],
 			"PlaylistChanged" : [],
+			"PlaylistPositionChanged" : [],
 		},
 	};
 
 	self.init = function() {
 		// Start polling the zone for its status info
 		self.getInfo();
-		// TODO - DISABLE POLLING ONCE DLNA NOTIFICATIONS ARE WORKING!
-		//self.pollingID = setInterval(self.getInfo, self.pollingRate);
+		self.pollingID = setInterval(self.getInfo, self.pollingRate);
+		self.getPlaylistQuick();
 	};
 
 	self.stopPolling = function() {
@@ -107,6 +109,9 @@ var JRiverZone = function(params) {
 				}
 
 				EventHandler.emit(self, 'InfoChanged');
+
+				// Get the serialized playlist info to check now playing list data
+				self.getPlaylistQuick();
 			} else {
 				CF.log("JRiver Playback/Info HTTP Request failed with status " + status + ".");
 			}
@@ -114,7 +119,7 @@ var JRiverZone = function(params) {
 	};
 
 	self.getPlaylist = function() {
-		CF.request(JRiver.player.webServiceURL + "Playback/Playlist?Token=" + JRiver.player.authToken + "&Zone=" + self.id, function (status, headers, body) {
+		CF.request(JRiver.player.webServiceURL + "Playback/Playlist?Token=" + JRiver.player.authToken + "&Zone=" + self.id + "&NoLocalFilenames=1", function (status, headers, body) {
 			if (status == 200) {
 				// Clear the previous playlist
 				self.playlist = [];
@@ -147,6 +152,34 @@ var JRiverZone = function(params) {
 		});
 	};
 
+	self.getPlaylistQuick = function() {
+		CF.request(JRiver.player.webServiceURL + "Playback/Playlist?Token=" + JRiver.player.authToken + "&Zone=" + self.id + "&Action=Serialize", function (status, headers, body) {
+			if (status == 200) {
+				// Reply format: http://yabb.jriver.com/interact/index.php?topic=61902.0;wap2
+				var data = body.split(";");
+				// Check if there is anything at all in the playlist
+				if (data.length < 4) {
+					// Nothing in the list, clear the now playing list
+					self.playlist = [];
+					self.nowPlayingIndex = 0;
+					EventHandler.emit(self, 'PlaylistChanged');
+					return;
+				}
+				self.nowPlayingIndex = data[2];
+				// Check if the current playlist array is a different length than the returned playlist length
+				if (self.playlist.length != data[1]) {
+					// Get the full playlist data again because the playlist has changed length
+					self.getPlaylist();
+				} else {
+					// Just update the currently playing indicator in the now playing list
+					EventHandler.emit(self, 'PlaylistPositionChanged', self.nowPlayingIndex);
+				}
+			} else {
+				CF.log("JRiver Playback/Playlist Serialize HTTP Request failed with status " + status + ".");
+			}
+		});
+	};
+
 	self.playByKey = function(key) {
 		CF.request(JRiver.player.webServiceURL + "Playback/PlayByKey?Token=" + JRiver.player.authToken + "&Zone=" + self.id + "&Key=" + key, function (status, headers, body) {
 			if (status != 200) {
@@ -172,7 +205,7 @@ var JRiverZone = function(params) {
 				var parser = new DOMParser();
 				var xmlDoc = parser.parseFromString(body, 'text/xml');
 				// Get the data from XML
-				CF.log("Position: " + xmlDoc.evaluate("//Item[@Name='Position']", xmlDoc, null, XPathResult.NUMBER_TYPE, null).numberValue);
+				//CF.log("Position: " + xmlDoc.evaluate("//Item[@Name='Position']", xmlDoc, null, XPathResult.NUMBER_TYPE, null).numberValue);
 			} else {
 				CF.log("JRiver Playback/Position HTTP Request failed with status " + status + ".");
 			}
@@ -200,12 +233,17 @@ var JRiverPlayer = function(params) {
 		currentZoneName: "",
 		currentZoneID: 0,
 		currentBrowseID: 0,
+		selectedID: 0,
 		browsing: {
 			"id": 0,
 			"title": "Menu",
 			"path": "Menu",
 			"items": []
 		},
+		searchResults: [],
+		mediaType: "",
+		mediaSubType: "",
+		browseField: "",
 		files: [],
 		eventCallbacks: {
 			"PlayerAuthorized" : [],
@@ -217,6 +255,7 @@ var JRiverPlayer = function(params) {
 			"FilesChanged" : [],
 			"ShuffleChanged" : [],
 			"RepeatChanged" : [],
+			"SearchResultsChanged" : [],
 		},
 	};
 
@@ -261,12 +300,6 @@ var JRiverPlayer = function(params) {
 				// Test streaming playback - TODO - THIS WORKS :)
 				//CF.setJoin("s99", "http://192.168.0.10:52199/Gizmo/MCWS/v1/File/GetFile?File=4084&Conversion=WebPlay&Playback=1&Token=" + self.authToken);
 
-				// Clear any previously discovered DLNA Zones
-				JRiver.DLNA_Zones = [];
-				// Request all zones (DLNA Media Renderers) - urn:schemas-upnp-org:device:MediaRenderer:1
-				// This is so we can subscribe to each zones DLNA notifications
-				CF.send("DLNA Discovery", "M-SEARCH * HTTP/1.1\r\nHOST: 239.255.255.250:1900\r\nMAN: \"ssdp:discover\"\r\nMX: 3\r\nST:"+JRiver.ST_Zone+"\r\n\r\n");
-
 				// Now get list of zones from JRiver API
 				self.getZones();
 				// Start browsing the player library
@@ -304,8 +337,6 @@ var JRiverPlayer = function(params) {
 
 					// Start polling the zone for it's status info
 					newZone.init();
-					// Get the playlist for the zone
-					newZone.getPlaylist();
 
 					if (newZone.id == self.currentZoneID) {
 						self.currentZoneName = newZone.name;
@@ -398,9 +429,36 @@ var JRiverPlayer = function(params) {
 			return;
 		}
 
-		// Update the browse ID only if we are browsing the content, not the main menus
-		if (browseItem.depth >= 2) {
+		if (browseItem.depth >= 2) { 			// Update the browse ID only if we are browsing the content, not the main menus
 			self.currentBrowseID = id;
+		} else if (browseItem.depth == 1) { 	// Update media type being browsed
+			self.mediaType = browseItem.title;
+			self.mediaSubType = "";
+		} else if (browseItem.depth == 2) { 	// Update browse filter
+			switch(self.mediaType) {
+				case "Audio" :
+					if (browseItem.title == "Artist" || browseItem.title == "Album" || browseItem.title == "Genre" || browseItem.title == "Composer") {
+						self.browseField = browseItem.title;
+					} else {
+						self.browseField = "Artist,Album,Name";
+					}
+					break;
+				case "Video" :
+					if (browseItem.title == "Movies") {
+						self.mediaSubType = "Movie";
+						self.browseField = "Name";
+					} else if (browseItem.title == "Shows") {
+						self.mediaSubType = "TV Show";
+						self.browseField = "Series,Name";
+					} else if (browseItem.title == "Home Videos") {
+						self.mediaSubType = "Home Video";
+						self.browseField = "Name";
+					} else {
+						self.mediaSubType = "";
+						self.browseField = "Name";
+					}
+					break;
+			}
 		}
 
 		// Check if the browsing items already exist, and just use existing items
@@ -469,6 +527,44 @@ var JRiverPlayer = function(params) {
 				}
 
 				EventHandler.emit(self, 'FilesChanged', browseItem || self.getBrowseItemByID(id));
+
+			} else {
+				CF.log("JRiver HTTP Request failed with status " + status + ".");
+			}
+		});
+	};
+
+	self.search = function(query) {
+		var files;
+		if (self.mediaSubType) {
+			files = "[Media Sub Type]=[" + self.mediaSubType + "]";
+		} else if (self.mediaType) {
+			files = "[Media Type]=[" + self.mediaType + "]";
+		}
+		var url = self.webServiceURL + "Library/Values?Token=" + self.authToken + "&Filter=" + encodeURIComponent(query) + "&Field=" + encodeURIComponent(self.browseField) +  "&Files=" + encodeURIComponent(files);
+		CF.log("SEARCH REQUEST: " + url);
+
+		CF.request(url, function (status, headers, body) {
+			if (status == 200) {
+				var parser = new DOMParser();
+				var xmlDoc = parser.parseFromString(body, 'text/xml');
+				// Get the data from XML
+				var items = xmlDoc.evaluate("/Response/Item", xmlDoc, null, XPathResult.ANY_TYPE, null);
+
+				var item = items.iterateNext();
+				self.searchResults = [];
+				var fields = self.browseField.split(",");
+				while (item) {
+					var type = item.getAttribute("Name");
+					if (fields.indexOf(type) >= 0) {
+						self.searchResults.push({type: type, value: item.textContent});
+					}
+					item = items.iterateNext();
+				}
+				CF.log("SEARCH RESULTS:");
+				CF.logObject(self.searchResults);
+
+				EventHandler.emit(self, 'SearchResultsChanged', query);
 
 			} else {
 				CF.log("JRiver HTTP Request failed with status " + status + ".");
@@ -566,7 +662,7 @@ var JRiverPlayer = function(params) {
 
 		if (theZone.info.DurationMS > 0) {
 			pos = Math.round((theZone.info.DurationMS / max) * pos);
-			CF.log("Set Pos: " + pos + ", max: " + theZone.info.DurationMS);
+			//CF.log("Set Pos: " + pos + ", max: " + theZone.info.DurationMS);
 			theZone.setPosition(pos);
 		}
 	};
@@ -578,6 +674,7 @@ var JRiverPlayer = function(params) {
 			// Dont need to process response body, just check if it was successful.	
 			if (status == 200) {
 				EventHandler.emit(self, 'ShuffleChanged', mode);
+				self.getCurrentZone().playlist = [];
 			} else {
 				CF.log("An error occured performing the Control/MCC Shuffle command '" + theEventURL + "'.\nResponse code was '" + status + "'.");
 			}
@@ -597,15 +694,79 @@ var JRiverPlayer = function(params) {
 		});
 	};
 
+	self.doPlayByKey = function(key, location, album, zoneID) {
+		location = location || "";
+		zoneID = zoneID || self.currentZoneID;
+		CF.log("Key: " + key);
+		CF.request(self.webServiceURL + "Playback/PlayByKey?Token=" + self.authToken + "&Key=" + key + "&Location=" + location, function(status) {
+			// Dont need to process response body, just check if it was successful.	
+			if (status == 200) {
+				// Get the playlist again, because it would have changed
+				self.getCurrentZone().getPlaylist();
+			} else {
+				CF.log("An error occured performing the 'Playback/PlayByKey?Token=" + self.authToken + "&Key=" + key + "&Location=" + location + "' command.\nResponse code was '" + status + "'.");
+			}
+		});
+	};
+
+	self.doPlayByBrowseID = function(id, mode, zoneID) {
+		mode = mode || "";
+		zoneID = zoneID || self.currentZoneID;
+		CF.log("ID: " + id);
+		CF.request(self.webServiceURL + "Browse/Files?Token=" + self.authToken + "&ID=" + id + "&Action=Play&PlayMode=" + mode, function(status) {
+			// Dont need to process response body, just check if it was successful.	
+			if (status == 200) {
+				// Get the playlist again, because it would have changed
+				self.getCurrentZone().getPlaylist();
+			} else {
+				CF.log("An error occured performing the 'Browse/Files?Token=" + self.authToken + "&ID=" + id + "&Action=Play&PlayMode=" + mode + "' command.\nResponse code was '" + status + "'.");
+			}
+		});
+	};
+
+	self.doPlayOption = function(mode, byKey) {
+		switch (mode) {
+			case 1: // Play Now and Clear
+				if (byKey) {
+
+				} else {
+					self.doPlayByBrowseID(JRiver.player.selectedID);
+				}
+				break;
+			case 2: // Play Next
+				if (byKey) {
+
+				} else {
+					self.doPlayByBrowseID(JRiver.player.selectedID, 'NextToPlay');
+				}
+				break;
+			case 3: // Append to Playlist
+				if (byKey) {
+
+				} else {
+					self.doPlayByBrowseID(JRiver.player.selectedID, 'Add');
+				}
+				break;
+			default: // Play Now without clearing
+				if (byKey) {
+
+				} else {
+					self.doPlayByBrowseID(JRiver.player.selectedID, 'NextToPlay');
+				}
+				self.doPlayback("Next");
+				break;
+		}
+		//self.doMCC(10001); // PLAY
+	};
+
 	return self;
 };
 
 var JRiver = {
 	ST_Server: "urn:schemas-upnp-org:device:X-JRiver-Library-Server:1",
-	ST_Zone: "urn:schemas-upnp-org:device:MediaRenderer:1",
 	navSeparator: " > ",
 	settings: {
-		trackMode: 0,
+		trackMode: 0, // Default to show track numbers as their playlist number
 		selectionMode: 0,
 		disableSleep: 0,
 		volumeButtons: 0,
@@ -622,16 +783,14 @@ var JRiver = {
 	servers: [],
 	selectedServer : null,
 	configuringServer: null,
-	DLNA_Zones: [],
-	resubscribeID: null,
-	subscriptions: [],
-	trackMode: 1, // Defaul to show track numbers as their playlist number
 	player: new JRiverPlayer(),
 
 	init: function(servers) {
 		//CF.log("JRiver: init()");
 
 		/*
+		OLD METHOD FOR DISCOVERING JRIVER USING JRIVER WEB API WHICH REQUIRED INTERNET CONNECTIVITY
+		REPLACED THIS METHOD WITH DLNA DISCOVERY
 		CF.request(JRiver.lookupAddress + JRiver.accessKey, function (status, headers, body) {
 			if (status == 200) {
 				// Read the XML data
@@ -650,7 +809,7 @@ var JRiver = {
 				JRiver.player.getConfiguration();
 			}
 		});
-*/
+		*/
 
 		// Listens for DLNA responses from and processes them
 		CF.watch(CF.FeedbackMatchedEvent, "DLNA Discovery", "Discovery Feedback", function(regex, data) {
@@ -697,89 +856,6 @@ var JRiver = {
 						}
 					});
 				}
-			} else if (deviceResponse["ST"] == JRiver.ST_Zone) {
-				// Now retrieve the device description from it's XML if one was given
-				if (deviceResponse["LOCATION"]) {
-					CF.request(deviceResponse["LOCATION"], function(status, headers, body) {
-						if (status == 200) {
-							// Read the XML data
-							var parser = new DOMParser();
-							var xmlDoc = parser.parseFromString(body, 'text/xml');
-							deviceResponse.NAME = xmlDoc.getElementsByTagName("friendlyName")[0].childNodes[0].nodeValue;
-							deviceResponse.IP = /([0-9]+(?:\.[0-9]+){3})/.exec(deviceResponse["LOCATION"])[1];
-							deviceResponse.PORT = /:([0-9]+)/.exec(deviceResponse["LOCATION"])[1];
-							deviceResponse.SID = {};
-							if (xmlDoc.getElementsByTagName("modelDescription")[0].childNodes[0].nodeValue == "JRiver DLNA Renderer") {
-								if (!JRiver.getDLNAZoneByLocation(deviceResponse["LOCATION"])) {
-									//CF.log("FOUND JRIVER ZONE - " + deviceResponse["NAME"]);
-									// Add zone and subscribe to its notification events
-									JRiver.DLNA_Zones.push(deviceResponse);
-									EventHandler.emit(JRiver, "ZoneDiscovered", deviceResponse);
-									// Subscribe to DLNA Notification Events
-									JRiver.subscribeEvents(deviceResponse);
-								}
-							}							
-						} else {
-							CF.log("An error occured requesting the DeviceInfo XML.\nResponse code was '" + status + "'.");
-						}
-					});
-				}
-			}
-		});
-
-		/*
-		THE FOLLOWING CODE WAS USED TO LISTEN TO DLNA NOTIFICATIONS FROM JRIVER, WHICH WAS DEEMED NOT USEFUL FOR THIS APPLICATION
-		The reason being that the notifications did not contain the data that the MCWS API was lacking, so was unecessary.
-		The DLNA notification data was actually less useful than polling MCWS once a second...
-		No "now playing" queue modification notifications (ie. zero notification when a song is added to the current playlist)
-		*/
-
-		// Listens for DLNA Notify messages
-		CF.watch(CF.FeedbackMatchedEvent, "DLNA Notification", "Notification Feedback", function (regex, data) {
-			//CF.log("DLNA Notify Feedback:\n" + data);
-
-			// Notifications can come back in multiple packets, so need to make sure the EOM setting in the notifications system is set to:
-			// </e:propertyset>
-
-			// Check if the reply has XML data we are looking for, if not, disregard it
-			if (data.indexOf("<?xml") === -1) return;
-
-			data = trim(data);
-			
-			var deviceResponse = {};
-			// Split each line of header data
-			var headers = data.substring(0, data.indexOf("<?xml")).split("\r\n");
-			deviceResponse["NAME"] = decodeURIComponent(/_(.*?)\s/.exec(headers[0])[1]);
-			for (var i=0; i<headers.length - 1; i++) {
-				// Split the header name from the data - some responses won't have space after the colon, so we can't rely on that to split the data.
-				// Instead, split it all up using colons then join the data back if there were colons in the actual data.
-				var headerData = headers[i].split(":");
-				// Make sure the line was header data, skip HTTP Response, etc, that only have data (no header name).
-				if (headerData.length>1) {
-					// trim any spaces from the data, and join it all up if it contained colons (which we previously split)
-					deviceResponse[headerData[0].toUpperCase()] = trim(headerData.slice(1).join(":"));
-				}
-			}
-			if (!JRiver.getDLNAZoneBySID(deviceResponse["SID"])) {
-				CF.log("Event Notification IGNORED '" + deviceResponse["NAME"] + "': " + deviceResponse["SID"]);
-				return;
-			} else {
-				// Find the DLNA zone the notification was from
-				var theZone = JRiver.getDLNAZoneByName(deviceResponse["NAME"]);
-				// Set the SID for the event notification
-				if (theZone && !theZone.SID) {
-					theZone.SID = deviceResponse["SID"];
-				}
-
-				var xmlData = data.substring(data.indexOf("<?xml"));
-				var parser = new DOMParser();
-				var xmlDoc = parser.parseFromString(xmlData, 'text/xml');
-				// Get the data from XML
-				parser = new DOMParser();
-				xmlDoc = parser.parseFromString(xmlDoc.evaluate("//LastChange", xmlDoc, null, XPathResult.STRING_TYPE, null).stringValue, 'text/xml');
-				var s = new XMLSerializer();
-				var str = s.serializeToString(xmlDoc);
-				CF.log(str);
 			}
 		});
 
@@ -818,16 +894,9 @@ var JRiver = {
 	},
 
 	selectPlayer: function(server) {
-		// Unsubscribe to any notifications from the previous player
-		JRiver.unsubscribeEvents();
-
 		// Only create a new player object if the previous player object was different
 		if (JRiver.player.ipAddress != server.IP || JRiver.player.port != server.PORT || !JRiver.player.auth) {
 			if (JRiver.selectedServer !== null) {
-				// Clear timeouts for the notification resubscription
-				clearTimeout(JRiver.resubscribeID);
-				JRiver.resubscribeID = null;
-
 				// Mark the player as not selected
 				JRiver.selectedServer.selected = false;
 			}
@@ -842,50 +911,6 @@ var JRiver = {
 		}
 		// Get the configuration details of the discovered player
 		JRiver.player.getConfiguration();
-	},
-
-	subscribeEvents: function(zone) {
-		JRiver.subscribeEvent(zone, "/RenderingControl/event", "RenderControl_" + zone.NAME);
-		JRiver.subscribeEvent(zone, "/AVTransport/event", "TransportEvent_" + zone.NAME);
-		JRiver.resubscribeID = setTimeout(function(zone){JRiver.subscribeEvents(zone)}, 1800 * 1000, zone);
-	},
-
-	unsubscribeEvents: function() {
-		for (var i in JRiver.DLNA_Zones) {
-			var theZone = JRiver.DLNA_Zones[i];
-			for (var path in theZone.SID) {
-				CF.log("UNSUBSCRIBING: " + theZone.NAME + ", path: " + path + ", SID: " + theZone.SID[path]);
-				JRiver.subscribeEvent(theZone, path, null, theZone.SID[path]);
-			}
-		}		
-	},
-
-	subscribeEvent: function(zone, path, subURL, SID) {
-		var headers = {
-			"Cache-Control" : "no-cache",
-			"Pragma" : "no-cache",
-			"USER-AGENT" : "iOS UPnP/1.1 iViewer4",
-			"TIMEOUT" : "Second-1800"
-		};
-		var method;
-		if (!SID) {
-			method = "SUBSCRIBE";
-			headers["CALLBACK"] = "<http://" + CF.ipv4address + ":" + CF.systems["DLNA Notification"].port + "/" + subURL + ">";
-			headers["NT"] = "upnp:event";
-		} else {
-			method = "UNSUBSCRIBE";
-			headers["SID"] = SID;
-		}
-		if (zone.username && zone.password) {
-			headers["Authorization"] = "Basic " + btoa(zone.username + ":" + zone.password);
-		}
-		CF.request("http://" + zone.IP + ":" + zone.PORT + path , method, headers, function (status, headers, body) {
-			if (status == 200) {
-				zone.SID[path] = headers.SID;
-			} else {
-				CF.log("An error occured performing a SUBSCRIBE request.\nResponse code was '" + status + "'.");
-			}
-		});
 	},
 
 	// Configure one of the discovered servers, by its index in the servers array
@@ -918,42 +943,11 @@ var JRiver = {
 		return null;
 	},
 
-	getDLNAZoneByLocation: function(location) {
-		for (var zone in JRiver.DLNA_Zones) {
-			if (JRiver.DLNA_Zones[zone].LOCATION == location) {
-				return JRiver.DLNA_Zones[zone];
-			}
-		}
-		return null;
-	},
-
-	getDLNAZoneByName: function(name) {
-		for (var zone in JRiver.DLNA_Zones) {
-			if (JRiver.DLNA_Zones[zone].NAME == name) {
-				return JRiver.DLNA_Zones[zone];
-			}
-		}
-		return null;
-	},
-
-	getDLNAZoneBySID: function(sid) {
-		for (var zone in JRiver.DLNA_Zones) {
-			var theZone = JRiver.DLNA_Zones[zone];
-			for (var path in theZone.SID) {
-				if (theZone.SID[path] == sid)  {
-					return theZone;
-				}
-			}
-		}
-		return null;
-	},
 
 	onGUISuspended: function() {
 		// Even though the call is not executed immediately, it is enqueued for later processing:
 		// the displayed date will be the one generated by the time the app was suspended
 		CF.log("GUI suspended at " + (new Date()));
-		// Unsubscribe to any notifications from the previous server
-		JRiver.unsubscribeEvents(JRiver.selectedServer);
 
 		// Save connection details
 		CF.setToken(CF.GlobalTokensJoin, "servers", JSON.stringify(JRiver.servers));

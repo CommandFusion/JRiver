@@ -1,4 +1,6 @@
-var posSliderPressed = false, volSliderPressed = false;
+var posSliderPressed = false,
+	volSliderPressed = false,
+	searchID;
 
 CF.userMain = function() {
 	// Get username, password, authkey from token storage
@@ -10,6 +12,9 @@ CF.userMain = function() {
 		}
 		updateSettingsUI();
 	});
+
+	// Enable the status bar
+	CF.setJoin("d17931", 1);
 
 	// Move the zone subpage slightly off screen
 	// can't do it at design time because the shadow is too large.
@@ -57,6 +62,18 @@ CF.userMain = function() {
 	// Watch events for change of username and password in settings
 	CF.watch(CF.InputFieldEditedEvent, "s911", function(j,v) {
 		JRiver.configuringServer.password = v;
+	});
+
+	// Watch events for change of search query
+	CF.watch(CF.InputFieldEditedEvent, "s4", function(j,v) {
+		// Perform search only after finished editing by using a delay with setTimeout method
+
+		// Cancel the previous search delay
+		clearTimeout(searchID);
+		// Perform the next search
+		//searchID = setTimeout(function(){ JRiver.player.search(v); }, 500);
+		// Just search the browsing content
+		searchID = setTimeout(function(){ BrowseChanged(JRiver.player, null, v); }, 500);
 	});
 
 	EventHandler.on(JRiver, 'PlayerDiscovered', function(jr, server) {
@@ -124,6 +141,8 @@ CF.userMain = function() {
 				EventHandler.on(JRiver.player.zones[i], 'VolumeChanged', ZoneVolumeChanged);
 				// List to each zone's playlist change events
 				EventHandler.on(JRiver.player.zones[i], 'PlaylistChanged', ZonePlaylistChanged);
+				// List to each zone's playlist position change events
+				EventHandler.on(JRiver.player.zones[i], 'PlaylistPositionChanged', ZonePlaylistPositionChanged);
 				// Add each zone to the zone popup list
 				zoneList.push({
 					s100001: JRiver.player.zones[i].name,
@@ -163,81 +182,7 @@ CF.userMain = function() {
 			]);
 		});
 
-		EventHandler.on(JRiver.player, 'BrowseChanged', function(player, browseItem) {
-			CF.log("BrowseChanged: " + browseItem.title);
-
-			// if the returned data is one of the first two browsing levels
-			if (browseItem.depth < 2) {
-				// Clear the sidebar list
-				CF.listRemove("l2");
-				// Update the list title
-				CF.setJoin("s2", browseItem.title);
-				// Update the sidebar list
-				var listContent = [];
-				for (item in browseItem.items) {
-					listContent.push({
-						s100001: browseItem.items[item].title,
-						d100001: {
-							tokens: {
-								"browseid": browseItem.items[item].id
-							}
-						}
-					});
-				}
-				CF.listAdd("l2", listContent);
-			} else {
-				// Clear the main content list
-				CF.listRemove("l3");
-				// Update the list title
-				CF.setJoin("s3", setBrowsePath(browseItem.path));
-				// Update the main content list of data
-				var listContent = [];
-				var listRow = {};
-				var lineItem;
-				var i = 0;
-				for (item in browseItem.items) {
-					lineItem = (i % 4) + 1;
-					listRow["s10000" + lineItem] = browseItem.items[item].title;
-					listRow["s10001" + lineItem] = player.webServiceURL + "Browse/Image?Token=" + player.authToken + "&id=" + browseItem.items[item].id + "&format=png&width=135&height=135&";
-					listRow["s10002" + lineItem] = "coverart_blank.png";
-					listRow["d10000" + lineItem] = {
-						tokens: {
-							"browseid": browseItem.items[item].id
-						}
-					};
-					if (lineItem == 4) {
-						listContent.push(listRow);
-						listRow = {};
-					}
-					i++;
-				}
-				if (listRow.hasOwnProperty("s100001")) {
-					listContent.push(listRow);
-				}
-				CF.listAdd("l3", listContent);
-
-				if (browseItem.scrollPos) {
-					CF.log("Scroll to: " + browseItem.scrollPos);
-					setTimeout(function() {CF.listScroll("l3", browseItem.scrollPos, CF.PixelPosition, false)}, 500);
-				}
-			}
-
-			if (browseItem.depth > 2) {
-				// Show browse back button
-				CF.setProperties({join: "d3", opacity: 1});
-			} else if (browseItem.depth == 2) {
-				// Hide the back button
-				CF.setProperties({join: "d3", opacity: 0});
-			}
-
-			if (browseItem.depth == 0) {
-				// Hide the list back button
-				CF.setProperties({join: "d2", opacity: 0});
-			} else if (browseItem.depth == 1) {
-				// Show the list back button
-				CF.setProperties({join: "d2", opacity: 1});
-			}
-		});
+		EventHandler.on(JRiver.player, 'BrowseChanged', BrowseChanged);
 
 		EventHandler.on(JRiver.player, 'FilesChanged', function(player, browseItem) {
 			// Clear the main content list
@@ -264,15 +209,120 @@ CF.userMain = function() {
 			}
 			CF.listAdd("l3", listContent);
 		});
+
+		EventHandler.on(JRiver.player, 'SearchResultsChanged', function(player, query) {
+			// Clear the main content list
+			CF.listRemove("l3");
+			// Update the list title
+			CF.setJoin("s3", "Search Results: " + query);
+			// Update the main content list of data
+			var listContent = [];
+			var listRow = {};
+			for (var i = 0; i < JRiver.player.searchResults.length; i++) {
+				var theResult = JRiver.player.searchResults[i];
+				listContent.push({
+					"subpage" : "search_result_item",
+					"s100001" : theResult.value,
+					"d100001" : {
+						tokens: {
+							"name": theResult.value
+						}
+					}
+				});
+			}
+			CF.listAdd("l3", listContent);
+		});
 	});
+};
+
+function BrowseChanged(player, browseItem, query) {
+	CF.log(player.currentBrowseID);
+	browseItem = browseItem || JRiver.player.getBrowseItemByID(player.currentBrowseID);
+	CF.log("BrowseChanged: " + browseItem.title);
+
+	// if the returned data is one of the first two browsing levels
+	if (browseItem.depth < 2) {
+		// Clear the sidebar list
+		CF.listRemove("l2");
+		// Update the list title
+		CF.setJoin("s2", browseItem.title);
+		// Update the sidebar list
+		var listContent = [];
+		for (item in browseItem.items) {
+			listContent.push({
+				s100001: browseItem.items[item].title,
+				d100001: {
+					tokens: {
+						"browseid": browseItem.items[item].id
+					}
+				}
+			});
+		}
+		CF.listAdd("l2", listContent);
+	} else {
+		// Clear the main content list
+		CF.listRemove("l3");
+		// Update the list title
+		CF.setJoin("s3", setBrowsePath(browseItem.path, 3, query));
+		// Update the main content list of data
+		var listContent = [];
+		var listRow = {};
+		var lineItem;
+		var i = 0;
+		for (item in browseItem.items) {
+			if (!query || (browseItem.items[item].title.toLowerCase().indexOf(query.toLowerCase()) >= 0)) {
+				lineItem = (i % 4) + 1;
+				listRow["s10000" + lineItem] = browseItem.items[item].title;
+				listRow["s10001" + lineItem] = player.webServiceURL + "Browse/Image?Token=" + player.authToken + "&id=" + browseItem.items[item].id + "&format=png&width=135&height=135&";
+				listRow["s10002" + lineItem] = "coverart_blank.png";
+				listRow["d10000" + lineItem] = {
+					tokens: {
+						"browseid": browseItem.items[item].id
+					}
+				};
+				if (lineItem == 4) {
+					listContent.push(listRow);
+					listRow = {};
+				}
+				i++;
+			}
+		}
+		if (listRow.hasOwnProperty("s100001")) {
+			listContent.push(listRow);
+		}
+		CF.listAdd("l3", listContent);
+
+		if (browseItem.scrollPos) {
+			CF.log("Scroll to: " + browseItem.scrollPos);
+			setTimeout(function() {CF.listScroll("l3", browseItem.scrollPos, CF.PixelPosition, false)}, 500);
+		}
+	}
+
+	if (browseItem.depth > 2) {
+		// Show browse back button
+		CF.setProperties({join: "d3", opacity: 1});
+	} else if (browseItem.depth == 2) {
+		// Hide the back button
+		CF.setProperties({join: "d3", opacity: 0});
+	}
+
+	if (browseItem.depth == 0) {
+		// Hide the list back button
+		CF.setProperties({join: "d2", opacity: 0});
+	} else if (browseItem.depth == 1) {
+		// Show the list back button
+		CF.setProperties({join: "d2", opacity: 1});
+	}
 };
 
 function ZoneInfoChanged(theZone) {
 	if (theZone.id == JRiver.player.currentZoneID) {
 		// Check if track pos slider is being pressed - don't update its value whilst its pressed
-		var posSlider = {};
+		var posSlider;
 		if (!posSliderPressed) {
 			posSlider = { join: "a2", value: (65535/parseInt(theZone.info["DurationMS"], 10) * parseInt(theZone.info["PositionMS"], 10)) };
+		} else {
+			posSlider = { join: "a2", value: "[@a2]" };
 		}
 		// Update current track info
 		CF.setJoins([
@@ -307,7 +357,6 @@ function ZonePlaylistChanged(theZone) {
 		CF.listRemove("l4");
 		// Update the main content list of data
 		var listContent = [];
-		var nowPlayingIndex = 0;
 		for (var i = 0; i < theZone.playlist.length; i++) {
 			listContent.push({
 				"subpage" : "playlist_items",
@@ -324,14 +373,28 @@ function ZonePlaylistChanged(theZone) {
 				},
 				"d100002" : (theZone.playlist[i]["Key"] == theZone.info.FileKey) ? 1 : 0
 			});
-			if (theZone.playlist[i].Key == theZone.info.FileKey) {
-				nowPlayingIndex = i;
-			}
 		}
 		CF.listAdd("l4", listContent);
 		// Scroll to the current track position
-		setTimeout(function(){ CF.listScroll("l4", nowPlayingIndex, CF.MiddlePosition, false);}, 500);
+		setTimeout(function(){ CF.listScroll("l4", parseInt(theZone.nowPlayingIndex, 10), CF.MiddlePosition, false);}, 500);
 	}
+};
+
+function ZonePlaylistPositionChanged(theZone, thePos) {
+	if (theZone.id == JRiver.player.currentZoneID) {
+		CF.listUpdate("l4", [
+			{ index: CF.AllItems, d100002: 0},
+			{ index: thePos, d100002: 1},
+		]);
+	}
+};
+
+function showPlayMode(id) {
+	JRiver.player.selectedID = id;
+	CF.setJoins([
+		{join: "d5", value: 1},
+		{join: "d999999", value: 1}
+	]);
 };
 
 function showPopup(join) {
@@ -344,6 +407,7 @@ function showPopup(join) {
 function cancelPopups() {
 	CF.setJoins([
 		{join: "d1", value: 0},
+		{join: "d5", value: 0},
 		{join: "d6", value: 0},
 		{join: "d7", value: 0},
 		{join: "d8", value: 0},
@@ -353,7 +417,10 @@ function cancelPopups() {
 }
 
 // Concatenate the path string to limit length
-function setBrowsePath(path, max) {
+function setBrowsePath(path, max, query) {
+	if (query) {
+		return "Search Results: " + query;
+	}
 	// The number of items in the path to limit to
 	max = max || 3;
 	// Split the nav path up into an array of its elements

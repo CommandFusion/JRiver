@@ -133,14 +133,18 @@
     <theme type="button" name=".switch[state='0']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(switch_off.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".switch[state='1']"><![CDATA[padding: 0px 0px 0px 0px; background-image: url(switch_on.png); color: White; font-size: 12px; font-family: 'Verdana'; font-weight: normal; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="text" name=".setting_right"><![CDATA[ color: #395587; font-size: 17px; font-family: 'Arial'; text-align: right; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
-    <theme type="button" name=".setting_button[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(popup_setting_button_off.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
-    <theme type="button" name=".setting_button[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(popup_setting_button_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_title_button[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(popup_setting_button_off.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_title_button[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(popup_setting_button_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 12px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_item_first_center[state='0']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_item_first.png) 0 10 0 10; color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_item_first_center[state='1']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_item_first.png) 0 10 0 10; color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_item_last_center[state='0']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_item_last.png) 0 10 0 10; color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_item_last_center[state='1']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_item_last.png) 0 10 0 10; color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_item_middle_center[state='0']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_item_middle.png) 0 10 0 10; color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_item_middle_center[state='1']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_item_middle.png) 0 10 0 10; color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_button[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_off.png) 0 5 0 5; text-shadow: rgba(255,255,255,1) 0px -1px 0px; color: Black; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_button[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_button_red[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_red.png) 0 5 0 5; text-shadow: rgba(0,0,0,1) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_button_red[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
   </themes>
   <tokens>
     <token name="servers" value="" persist="1" />
@@ -205,6 +209,12 @@
       <subpage name="popup_cancel_p" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
       <subpage name="popup_repeat" x="30" y="68" j="7" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
       <subpage name="popup_shuffle" x="78" y="68" j="8" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <btn j="0" x="0" y="149" w="768" h="142" t="blank" flip="None" sim="0" l="0" s="1" js="CF.listScroll(&quot;l4&quot;, parseInt(JRiver.player.getCurrentZone().nowPlayingIndex, 10), CF.MiddlePosition, false);">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
     </portrait>
     <landscape t="bg_landscape_statusbar">
       <btn j="10" x="405" y="21" w="53" h="65" t="transport_playpause" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
@@ -282,6 +292,7 @@
       <slider j="3" d="0" x="986" y="130" w="38" h="638" min="0" max="100" decimals="0" unit="decimal" t="dots" invert="1" sim="1" l="0" />
       <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
       <video x="53" y="540" w="153" h="168" j="99" play="98" stop="99" url="" bgcolor="" format="" auth_user="" auth_password="" auth_realm="" auth_host="" auth_method="" auth_proxy="" autoplay="1" showcontrols="1" />
+      <subpage name="popup_playmode" x="318" y="238" j="5" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
     </landscape>
   </page>
   <page name="Settings" j="0" transition="push" subtype="fromRight" time="0.5" ease="easeIn" start="1">
@@ -398,6 +409,7 @@
     <btn j="100001" x="29" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
       <actions>
         <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(tokens[&quot;browseid&quot;]);" />
           <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
         </action>
       </actions>
@@ -413,6 +425,7 @@
     <btn j="100002" x="212" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
       <actions>
         <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(tokens[&quot;browseid&quot;]);" />
           <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
         </action>
       </actions>
@@ -424,6 +437,7 @@
     <btn j="100003" x="395" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
       <actions>
         <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(tokens[&quot;browseid&quot;]);" />
           <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
         </action>
       </actions>
@@ -435,6 +449,7 @@
     <btn j="100004" x="578" y="0" w="157" h="157" t="blank" flip="None" sim="0" l="0" s="1">
       <actions>
         <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(tokens[&quot;browseid&quot;]);" />
           <release delay="0" js="setLastScrollPos(list, listIndex); JRiver.player.browse(tokens[&quot;browseid&quot;]);" />
         </action>
       </actions>
@@ -737,7 +752,7 @@
       <inactive s="0">Play Next</inactive>
       <active s="0">Play Next</active>
     </btn>
-    <btn j="0" x="300" y="19" w="60" h="30" t="setting_button" flip="None" sim="1" l="0" s="1" js="cancelPopups();">
+    <btn j="0" x="300" y="19" w="60" h="30" t="setting_title_button" flip="None" sim="1" l="0" s="1" js="cancelPopups();">
       <inactive s="0">Cancel</inactive>
       <active s="0">Cancel</active>
     </btn>
@@ -746,5 +761,30 @@
     <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
     <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
     <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
+  </subpage>
+  <subpage name="popup_playmode" w="389" h="291" clip="1">
+    <img x="0" y="0" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_top_noarrow_bg.png</img>
+    <img x="0" y="100" w="389" h="91" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_middle_bg.png</img>
+    <img x="0" y="191" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_bottom_bg.png</img>
+    <btn j="0" x="41" y="18" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(0);cancelPopups();">
+      <inactive s="0">Play Immediately</inactive>
+      <active s="0">Play Immediately</active>
+    </btn>
+    <btn j="0" x="41" y="66" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(1);cancelPopups();">
+      <inactive s="0">Play Immediately and Clear</inactive>
+      <active s="0">Play Immediately and Clear</active>
+    </btn>
+    <btn j="0" x="41" y="162" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(3);cancelPopups();">
+      <inactive s="0">Append to Playlist</inactive>
+      <active s="0">Append to Playlist</active>
+    </btn>
+    <btn j="0" x="41" y="114" w="320" h="43" t="setting_button" flip="None" sim="1" l="0" s="1" js="JRiver.player.doPlayOption(2);cancelPopups();">
+      <inactive s="0">Play Next</inactive>
+      <active s="0">Play Next</active>
+    </btn>
+    <btn j="0" x="41" y="210" w="320" h="43" t="setting_button_red" flip="None" sim="1" l="0" s="1" js="cancelPopups();">
+      <inactive s="0">Cancel</inactive>
+      <active s="0">Cancel</active>
+    </btn>
   </subpage>
 </gui>
