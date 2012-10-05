@@ -22,7 +22,7 @@ CF.userMain = function() {
 	CF.setProperties([{join: "d1", x: 746},{join: "d9", x: 490},{join: "d2", opacity: 0.0},{join: "d3", opacity: 0.0}]);
 
 	// Show the help subpage
-	CF.setJoin("d998", 1);
+	interlockSettingSubpage("d998");
 
 	// Listen to volume and position slider press and release events, disable slider updating whilst its being dragged
 	CF.watch(CF.ObjectPressedEvent, "a1", function() {
@@ -72,8 +72,16 @@ CF.userMain = function() {
 		clearTimeout(searchID);
 		// Perform the next search
 		//searchID = setTimeout(function(){ JRiver.player.search(v); }, 500);
-		// Just search the browsing content
-		searchID = setTimeout(function(){ BrowseChanged(JRiver.player, null, v); }, 500);
+		// Check if we are searching a browse list or a file list
+		var browseItem = JRiver.player.getBrowseItemByID(JRiver.player.currentBrowseID);
+		if (browseItem.items.length) {
+			// search the browsing content
+			searchID = setTimeout(function(){ BrowseChanged(JRiver.player, null, v); }, 500);
+		} else {
+			// search the file list content
+			searchID = setTimeout(function(){ FilesChanged(JRiver.player, null, v); }, 500);
+		}
+		
 	});
 
 	EventHandler.on(JRiver, 'PlayerDiscovered', function(jr, server) {
@@ -101,12 +109,9 @@ CF.userMain = function() {
 			{ join: "s911", value: JRiver.configuringServer.password },
 			{ join: "s901", value: JRiver.configuringServer.NAME },
 			{ join: "s902", value: JRiver.configuringServer.IP },
-			{ join: "d996", value: 0 }, // Hide the options subpage
-			{ join: "d997", value: 0 }, // Hide the help screenshot subpage
-			{ join: "d998", value: 0 }, // Hide the help subpage
-			{ join: "d999", value: 1 }, // Show the settings subpage
 			{ join: "s999", value: "" } // Clear auth error text
 		]);
+		interlockSettingSubpage("d999");
 	});
 
 	EventHandler.on(JRiver, 'PlayerSelected', function() {
@@ -114,7 +119,7 @@ CF.userMain = function() {
 
 		// Listen to authorization event for the player
 		EventHandler.on(JRiver.player, 'PlayerAuthorized', function(player, authed) {
-			CF.log("Player Authorized: " + authed);
+			//CF.log("Player Authorized: " + authed);
 			if (authed) {
 				CF.setJoin("s999", "");
 				CF.flipToPage("Player");
@@ -126,7 +131,6 @@ CF.userMain = function() {
 
 		// Listen to zone discovery events for the new player
 		EventHandler.on(JRiver.player, 'ZonesChanged', function() {
-			CF.log(JRiver.player.zones.length);
 
 			// Set the current zone text in GUI
 			CF.setJoin("s1", JRiver.player.currentZoneName);
@@ -184,31 +188,7 @@ CF.userMain = function() {
 
 		EventHandler.on(JRiver.player, 'BrowseChanged', BrowseChanged);
 
-		EventHandler.on(JRiver.player, 'FilesChanged', function(player, browseItem) {
-			// Clear the main content list
-			CF.listRemove("l3");
-			// Update the list title
-			CF.setJoin("s3", setBrowsePath(browseItem.path));
-			// Update the main content list of data
-			var listContent = [];
-			var listRow = {};
-			for (var i = 0; i < JRiver.player.files.length; i++) {
-				var text = JRiver.player.files[i].Name;
-				if (JRiver.player.files[i].Track) {
-					text = JRiver.player.files[i].Track + ". " + text;
-				}
-				listContent.push({
-					"subpage" : "track_items",
-					"s100001" : text,
-					"d100001" : {
-						tokens: {
-							"key": JRiver.player.files[i].Key
-						}
-					}
-				});
-			}
-			CF.listAdd("l3", listContent);
-		});
+		EventHandler.on(JRiver.player, 'FilesChanged', FilesChanged);
 
 		EventHandler.on(JRiver.player, 'SearchResultsChanged', function(player, query) {
 			// Clear the main content list
@@ -236,9 +216,8 @@ CF.userMain = function() {
 };
 
 function BrowseChanged(player, browseItem, query) {
-	CF.log(player.currentBrowseID);
 	browseItem = browseItem || JRiver.player.getBrowseItemByID(player.currentBrowseID);
-	CF.log("BrowseChanged: " + browseItem.title);
+	//CF.log("BrowseChanged: " + browseItem.title);
 
 	// if the returned data is one of the first two browsing levels
 	if (browseItem.depth < 2) {
@@ -317,7 +296,7 @@ function BrowseChanged(player, browseItem, query) {
 		CF.listAdd("l3", listContent);
 
 		if (browseItem.scrollPos) {
-			CF.log("Scroll to: " + browseItem.scrollPos);
+			//CF.log("Scroll to: " + browseItem.scrollPos);
 			setTimeout(function() {CF.listScroll("l3", browseItem.scrollPos, CF.PixelPosition, false)}, 500);
 		}
 	}
@@ -339,30 +318,105 @@ function BrowseChanged(player, browseItem, query) {
 	}
 };
 
+function FilesChanged(player, browseItem, query) {
+	browseItem = browseItem || JRiver.player.getBrowseItemByID(player.currentBrowseID);
+
+	// Clear the main content list
+	CF.listRemove("l3");
+	// Update the list title
+	CF.setJoin("s3", setBrowsePath(browseItem.path));
+	// Update the main content list of data
+	var listContent = [];
+	var listRow = {};
+	var properties = {};
+	for (var i = 0; i < JRiver.player.files.length; i++) {
+		if (!query || (JRiver.player.files[i].Name.toLowerCase().indexOf(query.toLowerCase()) >= 0)) {
+			var firstLine = JRiver.player.files[i].Name, secondLine, smallRight, subpage,
+				duration = parseInt(JRiver.player.files[i]["Duration"], 10),
+				date;
+			if (JRiver.player.files[i]["Media Type"] == "Audio") {
+				subpage = "track_items";
+				firstLine = JRiver.player.files[i]["Track #"] + ". " + firstLine;
+				secondLine = JRiver.player.files[i]["Artist"] + " - " + JRiver.player.files[i]["Album"];
+				smallRight = ("00"+Math.floor(duration / 60)).slice(-2) + ":" + ("00"+Math.ceil(duration % 60)).slice(-2);
+			} else if (JRiver.player.files[i]["Media Type"] == "Video") {
+				subpage = "track_items";
+				smallRight = ("00"+Math.floor(duration / 3600)).slice(-2) + ":" + ("00"+Math.ceil((duration % 3600) / 60)).slice(-2) + ":" + ("00"+Math.ceil(duration % 60)).slice(-2);
+				if (JRiver.player.files[i]["Media Sub Type"] == "TV Show") {
+					firstLine = JRiver.player.files[i]["Episode"] + ". " + firstLine;
+					secondLine = JRiver.player.files[i]["Series"] + ", Season " + JRiver.player.files[i]["Season"] + ", Episode " + JRiver.player.files[i]["Episode"];
+				} else {
+					if (JRiver.player.files[i]["Date"]) {
+						date = new Date((parseInt(JRiver.player.files[i]["Date"],10) - 25569) * 86400 * 1000);
+						secondLine = date.getFullYear();
+					}
+					if (JRiver.player.files[i]["Genre"]) {
+						secondLine = secondLine + (secondLine != "" ? ", " : "") + JRiver.player.files[i]["Genre"];
+					}
+				}
+			}
+
+			listContent.push({
+				"subpage" : subpage,
+				"s100001" : firstLine,
+				"s100002" : secondLine,
+				"s100003" : smallRight,
+				"d100001" : {
+					tokens: {
+						"key": JRiver.player.files[i].Key
+					}
+				},
+				"d100002" : {
+					tokens: {
+						"key": JRiver.player.files[i].Key
+					}
+				}
+			});
+		}
+	}
+	// Change theme for first and last list item buttons
+	listContent[0]["d100001"]["properties"] = {theme: "setting_item_first"};
+	listContent[listContent.length-1]["d100001"]["properties"] = {theme: "setting_item_last"};	
+	// Add the items to the list
+	CF.listAdd("l3", listContent);
+}
+
 function ZoneInfoChanged(theZone) {
 	if (theZone.id == JRiver.player.currentZoneID) {
-		// Check if track pos slider is being pressed - don't update its value whilst its pressed
-		var posSlider;
-		if (!posSliderPressed) {
-			posSlider = { join: "a2", value: (65535/parseInt(theZone.info["DurationMS"], 10) * parseInt(theZone.info["PositionMS"], 10)) };
+		if (theZone.playlist.length) {
+			// Check if track pos slider is being pressed - don't update its value whilst its pressed
+			var posSlider;
+			if (!posSliderPressed) {
+				posSlider = { join: "a2", value: (65535/parseInt(theZone.info["DurationMS"], 10) * parseInt(theZone.info["PositionMS"], 10)) };
+			} else {
+				posSlider = { join: "a2", value: "[@a2]" };
+			}
+			// Update current track info
+			CF.setJoins([
+				{ join: "s100", value: "http://" + JRiver.player.ipAddress + ":" + JRiver.player.port + "/" + theZone.info.ImageURL + "&Token=" + JRiver.player.authToken + "&format=png&width=259&height=259&pad=1" },
+				{ join: "s101", value: "http://" + JRiver.player.ipAddress + ":" + JRiver.player.port + "/" + theZone.info.ImageURL + "&Token=" + JRiver.player.authToken + "&format=png&width=768&height=768&Type=Full" },
+				{ join: "d10", value: (theZone.info.State == 2 ? 1 : 0) }, // Play Pause button state, 2 = playing
+				{ join: "s110", value: (parseInt(theZone.info["PlayingNowPosition"], 10) + 1) + ". " + theZone.info["Name"] },
+				{ join: "s111", value: theZone.info["Artist"] + " - " + theZone.info["Album"] },
+				{ join: "s112", value: (theZone.info["Rating"]) ? "star_right_" + theZone.info["Rating"] + ".png" : "star_right_none.png"},
+				{ join: "s108", value: theZone.info["ElapsedTimeDisplay"] },
+				{ join: "s109", value: theZone.info["TotalTimeDisplay"] },
+				posSlider
+			]);
 		} else {
-			posSlider = { join: "a2", value: "[@a2]" };
+			// Nothing playing
+			CF.setJoins([
+				{ join: "s100", value: "" },
+				{ join: "s101", value: "" },
+				{ join: "d10", value: 0 },
+				{ join: "s110", value: "Nothing Playing." },
+				{ join: "s111", value: "Rotate to browse the media library." },
+				{ join: "s112", value: "star_right_none.png" },
+				{ join: "s108", value: "0:00" },
+				{ join: "s109", value: "" },
+				{ join: "a2", value: 0 }
+			]);
 		}
-		// Update current track info
-		CF.setJoins([
-			{ join: "s100", value: "http://" + JRiver.player.ipAddress + ":" + JRiver.player.port + "/" + theZone.info.ImageURL + "&Token=" + JRiver.player.authToken + "&format=png&width=259&height=259&pad=1" },
-			{ join: "s101", value: "http://" + JRiver.player.ipAddress + ":" + JRiver.player.port + "/" + theZone.info.ImageURL + "&Token=" + JRiver.player.authToken + "&format=png&width=768&height=768&Type=Full" },
-			{ join: "d10", value: (theZone.info.State == 2 ? 1 : 0) }, // Play Pause button state, 2 = playing
-			{ join: "s110", value: (parseInt(theZone.info["PlayingNowPosition"], 10) + 1) + ". " + theZone.info["Name"] },
-			{ join: "s111", value: theZone.info["Artist"] + " - " + theZone.info["Album"] },
-			{ join: "s112", value: (theZone.info["Rating"]) ? "star_right_" + theZone.info["Rating"] + ".png" : "star_right_none.png"},
-			{ join: "s108", value: theZone.info["ElapsedTimeDisplay"] },
-			{ join: "s109", value: theZone.info["TotalTimeDisplay"] },
-			posSlider
-		]);
-
-		// Update the current track in the now playing queue
-		// TODO
 	}
 
 	// Force volume update as well
@@ -382,12 +436,32 @@ function ZonePlaylistChanged(theZone) {
 		// Update the main content list of data
 		var listContent = [];
 		for (var i = 0; i < theZone.playlist.length; i++) {
+			var duration = parseInt(theZone.playlist[i]["Duration"], 10);
+			var audio = (theZone.playlist[i]["Media Type"] == "Audio");
+			var secondLine;
+			if (audio) {
+				duration = ("00"+Math.floor(duration / 60)).slice(-2) + ":" + ("00"+Math.ceil(duration % 60)).slice(-2);
+				secondLine = theZone.playlist[i]["Artist"] + " - " + theZone.playlist[i]["Album"];
+			} else {
+				duration = ("00"+Math.floor(duration / 3600)).slice(-2) + ":" + ("00"+Math.ceil((duration % 3600) / 60)).slice(-2) + ":" + ("00"+Math.ceil(duration % 60)).slice(-2);
+				if (theZone.playlist[i]["Media Sub Type"] == "TV Show") {
+					secondLine = theZone.playlist[i]["Series"] + ", Season " + theZone.playlist[i]["Season"] + ", Episode " + theZone.playlist[i]["Episode"];
+				} else {
+					if (theZone.playlist[i]["Date"]) {
+						date = new Date((parseInt(theZone.playlist[i]["Date"],10) - 25569) * 86400 * 1000);
+						secondLine = date.getFullYear();
+					}
+					if (theZone.playlist[i]["Genre"]) {
+						secondLine = secondLine + (secondLine != "" ? ", " : "") + theZone.playlist[i]["Genre"];
+					}
+				}
+			}
 			listContent.push({
 				"subpage" : "playlist_items",
 				"s100001" : theZone.playlist[i]["Name"],
-				"s100002" : theZone.playlist[i]["Artist"],
-				"s100003" : ("00"+Math.floor(parseInt(theZone.playlist[i]["Duration"], 10) / 60)).slice(-2) + ":" + ("00"+Math.ceil(parseInt(theZone.playlist[i]["Duration"], 10) % 60)).slice(-2),
-				"s100004" : (JRiver.settings.trackMode == 0) ? (i + 1) : theZone.playlist[i]["Track #"],
+				"s100002" : secondLine,
+				"s100003" : duration,
+				"s100004" : (JRiver.settings.trackMode == 0 || !audio) ? (i + 1) : theZone.playlist[i]["Track #"],
 				"s100005" : (theZone.playlist[i]["Rating"]) ? "star_right_" + theZone.playlist[i]["Rating"] + ".png" : "star_right_none.png",
 				"s100006" : JRiver.player.webServiceURL + "File/GetImage?File=" + theZone.playlist[i]["Key"] + "&Token=" + JRiver.player.authToken + "&format=png&width=44&height=44",
 				"d100001" : {
@@ -413,8 +487,9 @@ function ZonePlaylistPositionChanged(theZone, thePos) {
 	}
 };
 
-function showPlayMode(id) {
+function showPlayMode(id, key) {
 	JRiver.player.selectedID = id;
+	JRiver.player.selectedKey = key;
 	CF.setJoins([
 		{join: "d5", value: 1},
 		{join: "d999999", value: 1}
@@ -437,6 +512,16 @@ function cancelPopups() {
 		{join: "d8", value: 0},
 		{join: "d9", value: 0},
 		{join: "d999999", value: 0}
+	]);
+}
+
+function interlockSettingSubpage(join) {
+	CF.setJoins([
+		{join: "d995", value: (join == "d995") ? 1 : 0},
+		{join: "d996", value: (join == "d996") ? 1 : 0},
+		{join: "d997", value: (join == "d997") ? 1 : 0},
+		{join: "d998", value: (join == "d998") ? 1 : 0},
+		{join: "d999", value: (join == "d999") ? 1 : 0}
 	]);
 }
 
@@ -476,16 +561,16 @@ function updateSettingsUI() {
 	var selectionMode;
 	switch(JRiver.settings.selectionMode) {
 		case 1 :
-			selectionMode = "Play Immediately and Clear Playlist";
+			selectionMode = "Play Now and Clear Playlist";
 			break;
 		case 2 :
 			selectionMode = "Play Next";
 			break;
 		case 3 :
-			selectionMode = "Append to Playlist";
+			selectionMode = "Add to End";
 			break;
 		default :
-			selectionMode = "Play Immediately";
+			selectionMode = "Play Now";
 			break;
 	}
 	CF.setJoins([

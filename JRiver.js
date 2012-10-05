@@ -234,6 +234,7 @@ var JRiverPlayer = function(params) {
 		currentZoneID: 0,
 		currentBrowseID: 0,
 		selectedID: 0,
+		selectedKey: 0,
 		browsing: {
 			"id": 0,
 			"title": "Menu",
@@ -542,7 +543,7 @@ var JRiverPlayer = function(params) {
 			files = "[Media Type]=[" + self.mediaType + "]";
 		}
 		var url = self.webServiceURL + "Library/Values?Token=" + self.authToken + "&Filter=" + encodeURIComponent(query) + "&Field=" + encodeURIComponent(self.browseField) +  "&Files=" + encodeURIComponent(files);
-		CF.log("SEARCH REQUEST: " + url);
+		//CF.log("SEARCH REQUEST: " + url);
 
 		CF.request(url, function (status, headers, body) {
 			if (status == 200) {
@@ -561,8 +562,6 @@ var JRiverPlayer = function(params) {
 					}
 					item = items.iterateNext();
 				}
-				CF.log("SEARCH RESULTS:");
-				CF.logObject(self.searchResults);
 
 				EventHandler.emit(self, 'SearchResultsChanged', query);
 
@@ -697,7 +696,6 @@ var JRiverPlayer = function(params) {
 	self.doPlayByKey = function(key, location, album, zoneID) {
 		location = location || "";
 		zoneID = zoneID || self.currentZoneID;
-		CF.log("Key: " + key);
 		CF.request(self.webServiceURL + "Playback/PlayByKey?Token=" + self.authToken + "&Key=" + key + "&Location=" + location, function(status) {
 			// Dont need to process response body, just check if it was successful.	
 			if (status == 200) {
@@ -712,7 +710,6 @@ var JRiverPlayer = function(params) {
 	self.doPlayByBrowseID = function(id, mode, zoneID) {
 		mode = mode || "";
 		zoneID = zoneID || self.currentZoneID;
-		CF.log("ID: " + id);
 		CF.request(self.webServiceURL + "Browse/Files?Token=" + self.authToken + "&ID=" + id + "&Action=Play&PlayMode=" + mode, function(status) {
 			// Dont need to process response body, just check if it was successful.	
 			if (status == 200) {
@@ -724,39 +721,46 @@ var JRiverPlayer = function(params) {
 		});
 	};
 
-	self.doPlayOption = function(mode, byKey) {
+	self.doPlayOption = function(mode) {
+		if (self.selectedKey) {
+			self.selectItem(self.selectedKey, mode);
+			return;
+		}
 		switch (mode) {
 			case 1: // Play Now and Clear
-				if (byKey) {
-
-				} else {
-					self.doPlayByBrowseID(JRiver.player.selectedID);
-				}
+				self.doPlayByBrowseID(JRiver.player.selectedID);
 				break;
 			case 2: // Play Next
-				if (byKey) {
-
-				} else {
-					self.doPlayByBrowseID(JRiver.player.selectedID, 'NextToPlay');
-				}
+				self.doPlayByBrowseID(JRiver.player.selectedID, 'NextToPlay');
 				break;
 			case 3: // Append to Playlist
-				if (byKey) {
-
-				} else {
-					self.doPlayByBrowseID(JRiver.player.selectedID, 'Add');
-				}
+				self.doPlayByBrowseID(JRiver.player.selectedID, 'Add');
 				break;
 			default: // Play Now without clearing
-				if (byKey) {
-
-				} else {
-					self.doPlayByBrowseID(JRiver.player.selectedID, 'NextToPlay');
-				}
+				self.doPlayByBrowseID(JRiver.player.selectedID, 'NextToPlay');
 				self.doPlayback("Next");
 				break;
 		}
 		//self.doMCC(10001); // PLAY
+	};
+
+	self.selectItem = function(key, mode) {
+		mode = mode || JRiver.settings.selectionMode;
+		switch(mode) {
+			case 1:
+				self.doPlayByKey(key);
+				break;
+			case 2:
+				self.doPlayByKey(key, "Next");
+				break;
+			case 3:
+				self.doPlayByKey(key, "End");
+				break;
+			default:
+				self.doPlayByKey(key, "Next");
+				self.doPlayback("Next");
+				break;
+		}
 	};
 
 	return self;
@@ -972,7 +976,11 @@ var JRiver = {
 	setViewMode: function(mode) {
 		JRiver.settings.viewMode = mode;
 		EventHandler.emit(JRiver, "SettingsChanged");
-		EventHandler.emit(JRiver.player, "BrowseChanged", JRiver.player.getBrowseItemByID(JRiver.player.currentBrowseID));
+		if (JRiver.player.selectedKey) {
+			EventHandler.emit(JRiver.player, "FilesChanged", JRiver.player.getBrowseItemByID(JRiver.player.currentBrowseID));
+		} else{
+			EventHandler.emit(JRiver.player, "BrowseChanged", JRiver.player.getBrowseItemByID(JRiver.player.currentBrowseID));
+		}
 	}
 };
 

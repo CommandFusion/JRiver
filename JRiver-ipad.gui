@@ -145,6 +145,12 @@
     <theme type="button" name=".setting_button[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_button_red[state='0']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_red.png) 0 5 0 5; text-shadow: rgba(0,0,0,1) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
     <theme type="button" name=".setting_button_red[state='1']"><![CDATA[padding: 0px 5px 0px 5px; -webkit-border-image: url(setting_button_on.png) 0 5 0 5; text-shadow: rgba(0,0,0,0.59) 0px -1px 0px; color: White; font-size: 20px; font-family: 'Arial'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="text" name=".setting_content_right"><![CDATA[ text-shadow: rgba(255,255,255,0.78) 0px 1px 0px; color: #4C566C; font-size: 15px; font-family: 'Arial'; text-align: right; vertical-align: top; font-weight: normal; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".second_line_left"><![CDATA[ text-shadow: rgba(0,0,0,0.02) 0px 1px 0px; color: #C4C4C4; font-size: 15px; font-family: 'Arial'; text-align: left; vertical-align: top; font-weight: normal; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".white_med_center"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: White; font-size: 14px; font-family: 'Arial'; text-align: center; vertical-align: middle; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="text" name=".grey_med_center_top"><![CDATA[ text-shadow: rgba(0,0,0,0.78) 0px 1px 0px; color: #DDDDDD; font-size: 14px; font-family: 'Arial'; text-align: center; vertical-align: top; font-weight: bold; font-style: none; text-decoration: none; display: table-cell;]]></theme>
+    <theme type="button" name=".setting_item_left[state='0']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_button.png) 0 10 0 10; color: #040404; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: left; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
+    <theme type="button" name=".setting_item_left[state='1']"><![CDATA[padding: 0px 10px 0px 10px; -webkit-border-image: url(setting_button.png) 0 10 0 10; color: #375388; font-size: 17px; font-family: 'Verdana'; font-weight: bold; font-style: none; text-decoration: none; text-align: center; vertical-align: middle; display: table-cell; box-sizing: border-box; -webkit-box-sizing: border-box; -webkit-tap-highlight-color:rgba(0,0,0,0);]]></theme>
   </themes>
   <tokens>
     <token name="servers" value="" persist="1" />
@@ -201,20 +207,20 @@
       <list j="4" x="0" y="303" w="768" h="720" headerSub="" titleSub="" contentSub="playlist_items" footerSub="" orientation="v" l="0" swipedelete="0" />
       <img x="3" y="144" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
       <img x="13" y="156" w="135" h="135" j="100" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
-      <txt j="110" x="164" y="153" w="591" h="32" t="item_left" wrap="False" l="0">Track Title</txt>
       <txt j="111" x="164" y="173" w="591" h="32" t="item_med_left" wrap="False" l="0">Track Title</txt>
+      <txt j="110" x="164" y="153" w="591" h="32" t="item_left" wrap="False" l="0">Track Title</txt>
       <txt j="109" x="596" y="100" w="58" h="32" t="item_med_left" wrap="False" l="0">00:00</txt>
       <txt j="108" x="106" y="100" w="69" h="32" t="item_med_right" wrap="False" l="0">00:00</txt>
       <img x="164" y="214" w="108" h="44" j="112" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_none.png</img>
-      <subpage name="popup_cancel_p" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
-      <subpage name="popup_repeat" x="30" y="68" j="7" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
-      <subpage name="popup_shuffle" x="78" y="68" j="8" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
       <btn j="0" x="0" y="149" w="768" h="142" t="blank" flip="None" sim="0" l="0" s="1" js="CF.listScroll(&quot;l4&quot;, parseInt(JRiver.player.getCurrentZone().nowPlayingIndex, 10), CF.MiddlePosition, false);">
         <inactive s="0">
         </inactive>
         <active s="0">
         </active>
       </btn>
+      <subpage name="popup_cancel_p" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
+      <subpage name="popup_repeat" x="30" y="68" j="7" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
+      <subpage name="popup_shuffle" x="78" y="68" j="8" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
     </portrait>
     <landscape t="bg_landscape_statusbar">
       <btn j="10" x="405" y="21" w="53" h="65" t="transport_playpause" flip="None" sim="0" l="0" s="1" js="JRiver.player.doPlayback(&quot;PlayPause&quot;);">
@@ -223,7 +229,7 @@
         <active s="0">
         </active>
       </btn>
-      <subpage name="now_playing" x="0" y="473" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <subpage name="now_playing" x="0" y="473" j="0" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
       <subpage name="volume" x="0" y="20" j="0" transition1="" subtype1="" time1="0" ease1="" transition2="" subtype2="" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
       <list j="2" x="0" y="129" w="259" h="344" headerSub="" titleSub="" contentSub="sidebar_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
       <btn j="2" x="0" y="86" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="JRiver.player.browse();">
@@ -291,11 +297,11 @@
       </btn>
       <slider j="3" d="0" x="986" y="130" w="38" h="638" min="0" max="100" decimals="0" unit="decimal" t="dots" invert="1" sim="1" l="0" />
       <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
-      <video x="53" y="540" w="153" h="168" j="99" play="98" stop="99" url="" bgcolor="" format="" auth_user="" auth_password="" auth_realm="" auth_host="" auth_method="" auth_proxy="" autoplay="1" showcontrols="1" />
-      <subpage name="popup_playmode" x="318" y="238" j="5" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
+      <subpage name="popup_playmode" x="318" y="238" j="5" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <subpage name="now_playing_details" x="0" y="509" j="13" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="1" topmost="1" v="1" l="0" />
     </landscape>
   </page>
-  <page name="Settings" j="0" transition="push" subtype="fromRight" time="0.5" ease="easeIn" start="1">
+  <page name="Settings" j="0" transition="fade" subtype="None" time="0.3" ease="easeIn" start="1">
     <portrait />
     <landscape t="bg_landscape_statusbar">
       <txt j="0" x="0" y="88" w="260" h="39" t="title_center" wrap="True" l="0">JRiver Players</txt>
@@ -304,11 +310,11 @@
       <subpage name="configure_default" x="260" y="130" j="998" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
       <img x="0" y="379" w="259" h="36" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_sidebar_title.png</img>
       <txt j="0" x="7" y="378" w="252" h="37" t="sidebar_subtitle" wrap="False" l="0">OPTIONS</txt>
-      <btn j="0" x="0" y="416" w="259" h="44" t="sidebar_listitem" flip="None" sim="1" l="0" s="1" js="CF.setJoins([{join: &quot;d998&quot;, value: 0}, {join: &quot;d999&quot;, value: 0}, {join: &quot;d996&quot;, value: 1}]);">
+      <btn j="0" x="0" y="416" w="259" h="44" t="sidebar_listitem" flip="None" sim="1" l="0" s="1" js="interlockSettingSubpage(&quot;d996&quot;)">
         <inactive s="0">App Settings</inactive>
         <active s="0">App Settings</active>
       </btn>
-      <subpage name="configure_options" x="260" y="86" j="996" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="1" v="1" l="0" />
+      <subpage name="configure_options" x="260" y="86" j="996" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
       <btn j="0" x="220" y="86" w="39" h="44" t="icon_refresh" flip="None" sim="1" l="0" s="1">
         <actions>
           <action>
@@ -320,9 +326,18 @@
         <active s="0">
         </active>
       </btn>
-      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <subpage name="popup_cancel_l" x="0" y="0" j="999999" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="0" l="0" />
       <subpage name="popup_playoptions" x="635" y="258" j="6" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
       <subpage name="settings_screenshot" x="0" y="0" j="997" transition1="fade" subtype1="None" time1="0.1" ease1="" transition2="fade" subtype2="None" time2="0.3" ease2="" clickthrough="0" topmost="1" v="0" l="0" />
+      <img x="400" y="20" w="224" h="66" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">logo_rivermate_on.png</img>
+      <img x="800" y="20" w="224" h="66" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">powered_by_off.png</img>
+      <subpage name="configure_commandfusion" x="260" y="86" j="995" transition1="None" subtype1="None" time1="0" ease1="" transition2="None" subtype2="None" time2="0" ease2="" clickthrough="0" topmost="0" v="1" l="0" />
+      <btn j="0" x="0" y="21" w="1023" h="64" t="blank" flip="None" sim="0" l="0" s="1" js="interlockSettingSubpage(&quot;d995&quot;)">
+        <inactive s="0">
+        </inactive>
+        <active s="0">
+        </active>
+      </btn>
     </landscape>
   </page>
   <subpage name="popup_zones_listitem" w="238" h="44" clip="1" t="popup_zones_listitem">
@@ -337,6 +352,12 @@
     <img x="0" y="36" w="259" h="259" j="100" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_nowplaying_bg.png</img>
     <txt j="0" x="7" y="0" w="126" h="36" t="sidebar_subtitle_left" wrap="False" l="0">NOW PLAYING</txt>
     <img x="182" y="0" w="77" h="36" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_rotate_info.png</img>
+    <btn j="0" x="0" y="0" w="259" h="295" t="blank" flip="None" sim="0" l="0" s="1" js="CF.setJoin(&quot;d13&quot;, &quot;{{1-[@d13]}}&quot;);">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
   </subpage>
   <subpage name="volume" w="260" h="65" clip="1">
     <btn j="0" x="3" y="0" w="38" h="65" t="vol_down" flip="None" sim="1" l="0" s="1" js="JRiver.player.setVolume(-0.10, 1);">
@@ -460,13 +481,27 @@
     </btn>
   </subpage>
   <subpage name="track_items" w="764" h="44" clip="1">
-    <txt j="100001" x="14" y="0" w="750" h="44" t="title_left" wrap="False" l="0">Text</txt>
-    <btn j="100001" x="0" y="0" w="764" h="44" t="blank" flip="None" sim="0" l="0" s="1">
+    <btn j="100001" x="7" y="0" w="722" h="44" t="setting_item_middle" flip="None" sim="1" l="0" s="1">
+      <actions>
+        <action>
+          <press delay="0" hold="1000" repeat="0" js="showPlayMode(null, tokens[&quot;key&quot;]);" />
+          <release delay="0" js="JRiver.player.selectItem(tokens[&quot;key&quot;]);" />
+        </action>
+      </actions>
       <inactive s="0">
       </inactive>
       <active s="0">
       </active>
     </btn>
+    <btn j="100002" x="689" y="0" w="36" h="44" t="sidebar_arrow" flip="None" sim="1" l="0" s="1">
+      <inactive s="0">
+      </inactive>
+      <active s="0">
+      </active>
+    </btn>
+    <txt j="100002" x="14" y="25" w="600" h="18" t="second_line_left" wrap="False" l="0">New Text Object</txt>
+    <txt j="100001" x="14" y="2" w="600" h="20" t="sidebar_item" wrap="False" l="0">New Text Object</txt>
+    <txt j="100003" x="615" y="2" w="74" h="41" t="setting_right" wrap="False" l="0">00:00</txt>
   </subpage>
   <subpage name="cache" w="768" h="1024" clip="1">
     <img x="92" y="36" w="157" h="157" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">coverart_blank.png</img>
@@ -499,8 +534,8 @@
     <txt j="100004" x="44" y="0" w="41" h="44" t="item_right" wrap="False" l="0">0</txt>
     <img x="89" y="0" w="1" h="44" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">dark_item_splitter.png</img>
     <img x="616" y="0" w="1" h="44" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">dark_item_splitter.png</img>
-    <txt j="100003" x="621" y="0" w="63" h="44" t="item_left_dark" wrap="False" l="0">00:00</txt>
-    <img x="502" y="0" w="108" h="44" j="100005" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_5.png</img>
+    <txt j="100003" x="621" y="0" w="84" h="44" t="item_left_dark" wrap="False" l="0">00:00</txt>
+    <img x="502" y="0" w="108" h="44" j="100005" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">stars_right_5.png</img>
     <img x="0" y="0" w="44" h="44" j="100006" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0" />
     <txt j="100002" x="97" y="19" w="407" h="25" t="item_med_left" wrap="False" l="0">Track Name</txt>
   </subpage>
@@ -603,10 +638,11 @@
     </btn>
   </subpage>
   <subpage name="search" w="192" h="65" clip="1">
-    <img x="1" y="18" w="25" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_left.png</img>
-    <img x="26" y="18" w="149" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_middle.png</img>
-    <img x="175" y="18" w="15" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_right.png</img>
-    <input j="0" s="4" x="29" y="19" w="153" h="28" pass="0" autoFocus="0" f="0" t="search" l="0">Search</input>
+    <img x="1" y="27" w="25" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_left.png</img>
+    <img x="26" y="27" w="149" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_middle.png</img>
+    <img x="175" y="27" w="15" h="30" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">search_right.png</img>
+    <input j="0" s="4" x="29" y="28" w="153" h="28" pass="0" autoFocus="0" f="0" t="search" l="0">Filter by</input>
+    <txt j="0" x="4" y="3" w="187" h="25" t="topbar_light" wrap="False" l="0">FILTER CURRENT VIEW</txt>
   </subpage>
   <subpage name="sidebar_listitem_arrow" w="259" h="44" clip="1">
     <btn j="100001" x="0" y="0" w="259" h="44" t="sidebar_listitem" flip="None" sim="1" l="0" s="1" js="JRiver.selectPlayerByIndex(listIndex);">
@@ -659,18 +695,19 @@
     </txt>
   </subpage>
   <subpage name="configure_default" w="764" h="638" clip="1">
-    <txt j="0" x="30" y="0" w="279" h="30" t="setting_title" wrap="False" l="0">JRiver Auto Discovery</txt>
-    <img x="155" y="306" w="454" h="290" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">JRiver_settings.png</img>
-    <txt j="0" x="30" y="51" w="706" h="97" t="setting_content" wrap="True" l="0">Before this app can automatically discover and control your JRiver Media Center instances, you must enable 'Media Network' options in JRiver options.</txt>
+    <txt j="0" x="30" y="5" w="279" h="30" t="setting_title" wrap="False" l="0">JRiver Auto Discovery</txt>
+    <img x="155" y="311" w="454" h="290" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">JRiver_settings.png</img>
+    <txt j="0" x="30" y="56" w="706" h="97" t="setting_content" wrap="True" l="0">Before this app can automatically discover and control your JRiver Media Center instances, you must enable 'Media Network' options in JRiver options.</txt>
     <txt j="0" x="30" y="110" w="279" h="30" t="setting_title" wrap="False" l="0">Steps</txt>
     <txt j="0" x="30" y="161" w="721" h="137" t="setting_content" wrap="True" l="0">1. Open JRiver on your PC
 2. Navigate to 'Tools &gt; Options...' in the main menu
 3. In the Options menu, choose 'Media Network'
 4. Enable 'Use Media Network to share this library and enable DLNA'
-5. Under 'Advanced' make sure all the 'DLNA' options are enabled.
-6. Optionally enable authentication by entering a username and password (default is to leave these empty).</txt>
+5. Click on 'Access Key:' item to generate an access key - this step is required to allow remote control.
+6. Under 'Advanced' make sure all the 'DLNA' options are enabled.
+7. Optionally enable authentication by entering a username and password (default is to leave these empty).</txt>
     <txt j="0" x="29" y="601" w="706" h="36" t="setting_content_center" wrap="True" l="0">Tap the screenshot above for a full view of how your settings must look.</txt>
-    <btn j="0" x="142" y="296" w="481" h="317" t="blank" flip="None" sim="0" l="0" s="1" js="CF.setJoin(&quot;d997&quot;, 1);">
+    <btn j="0" x="142" y="301" w="481" h="317" t="blank" flip="None" sim="0" l="0" s="1" js="CF.setJoin(&quot;d997&quot;, 1);">
       <inactive s="0">
       </inactive>
       <active s="0">
@@ -688,7 +725,7 @@
   </subpage>
   <subpage name="configure_options" w="764" h="682" clip="1">
     <txt j="0" x="30" y="50" w="706" h="30" t="setting_title" wrap="False" l="0">Show Playlist or Album Track Numbers in "Now Playing" view</txt>
-    <btn j="0" x="0" y="0" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="CF.setJoins([{join: &quot;d996&quot;, value: 0}, {join: &quot;d998&quot;, value: 1}]);">
+    <btn j="0" x="0" y="0" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="interlockSettingSubpage(&quot;d998&quot;)">
       <inactive s="0">back</inactive>
       <active s="0">back</active>
     </btn>
@@ -727,6 +764,16 @@
     </btn>
     <txt j="1003" x="30" y="187" w="678" h="41" t="setting_right" wrap="False" l="0">New Text Object</txt>
     <img x="717" y="200" w="11" h="15" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">setting_arrow.png</img>
+    <txt j="0" x="30" y="330" w="279" h="30" t="setting_title" wrap="False" l="0">Version Info</txt>
+    <btn j="0" x="26" y="421" w="711" h="46" t="setting_item" flip="None" sim="1" l="0" s="1">
+      <inactive s="0">Check For Update</inactive>
+      <active s="0">Check For Update</active>
+    </btn>
+    <btn j="0" x="26" y="366" w="711" h="46" t="setting_item_left" flip="None" sim="0" l="0" s="1">
+      <inactive s="0">Current Version</inactive>
+      <active s="0">Current Version</active>
+    </btn>
+    <txt j="1006" x="49" y="368" w="678" h="41" t="setting_right" wrap="False" l="0">v0.0.1</txt>
   </subpage>
   <subpage name="popup_playoptions" w="389" h="320" clip="1">
     <img x="0" y="0" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_top_noarrow_bg.png</img>
@@ -737,16 +784,16 @@
     <img x="0" y="220" w="389" h="100" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_setting_bottom.png</img>
     <txt j="0" x="36" y="12" w="231" h="45" t="popup_title" wrap="False" l="0">Track Selection Mode</txt>
     <btn j="0" x="50" y="80" w="302" h="44" t="setting_item_first_center" flip="None" sim="1" l="0" s="1" js="JRiver.setSelectionMode(0)">
-      <inactive s="0">Play Immediately</inactive>
-      <active s="0">Play Immediately</active>
+      <inactive s="0">Play Now</inactive>
+      <active s="0">Play Now</active>
     </btn>
     <btn j="0" x="50" y="124" w="302" h="44" t="setting_item_middle_center" flip="None" sim="1" l="0" s="1" js="JRiver.setSelectionMode(1)">
-      <inactive s="0">Play Immediately and Clear</inactive>
-      <active s="0">Play Immediately and Clear</active>
+      <inactive s="0">Play Now and Clear Playlist</inactive>
+      <active s="0">Play Now and Clear Playlist</active>
     </btn>
     <btn j="0" x="50" y="212" w="302" h="46" t="setting_item_last_center" flip="None" sim="1" l="0" s="1" js="JRiver.setSelectionMode(3)">
-      <inactive s="0">Append to Playlist</inactive>
-      <active s="0">Append to Playlist</active>
+      <inactive s="0">Add to End</inactive>
+      <active s="0">Add to End</active>
     </btn>
     <btn j="0" x="50" y="168" w="302" h="44" t="setting_item_middle_center" flip="None" sim="1" l="0" s="1" js="JRiver.setSelectionMode(2)">
       <inactive s="0">Play Next</inactive>
@@ -756,11 +803,6 @@
       <inactive s="0">Cancel</inactive>
       <active s="0">Cancel</active>
     </btn>
-  </subpage>
-  <subpage name="popup_zones" w="296" h="410" clip="1" t="popup_zones">
-    <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
-    <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
-    <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
   </subpage>
   <subpage name="popup_playmode" w="389" h="291" clip="1">
     <img x="0" y="0" w="389" h="100" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_top_noarrow_bg.png</img>
@@ -819,6 +861,41 @@
       </inactive>
       <active s="100001">
       </active>
+    </btn>
+  </subpage>
+  <subpage name="now_playing_details" w="259" h="259" clip="1">
+    <img x="0" y="0" w="259" h="259" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">img_nowplaying_overlay.png</img>
+    <txt j="111" x="0" y="37" w="259" h="45" t="grey_med_center_top" wrap="True" l="0">Second Line</txt>
+    <txt j="110" x="0" y="0" w="259" h="37" t="white_med_center" wrap="True" l="0">First Line</txt>
+    <img x="10" y="197" w="11" h="57" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">slider_h_thin_left.png</img>
+    <img x="238" y="197" w="11" h="57" j="0" clickthrough="0" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">slider_h_thin_right.png</img>
+    <slider j="2" d="0" x="21" y="197" w="217" h="57" min="0" max="382" decimals="0" dragCmd="TrackPosSlider" releaseCmd="TrackPosSlider" unit="decimal" t="slider_h_thin" sim="1" l="0">
+      <indicator state="0" offsetX="0" offsetY="0" x="0" y="0" w="0" h="0" t="">slider_thin_indicator.png</indicator>
+      <indicator state="1" offsetX="0" offsetY="0" zoom="100" />
+    </slider>
+    <txt j="108" x="10" y="234" w="61" h="25" t="item_med_left" wrap="False" l="0">00:00</txt>
+    <txt j="109" x="191" y="234" w="58" h="25" t="item_med_right" wrap="False" l="0">00:00</txt>
+  </subpage>
+  <subpage name="popup_zones" w="296" h="410" clip="1" t="popup_zones">
+    <list j="1" x="29" y="72" w="239" h="298" headerSub="" titleSub="" contentSub="popup_zones_listitem" footerSub="" orientation="v" l="0" swipedelete="0" />
+    <img x="0" y="0" w="296" h="410" j="0" clickthrough="1" refresh="0" l="0" noCache="0" downloadIndicator="0" clearOnURLChange="0">popup_zones_overlay.png</img>
+    <txt j="0" x="23" y="28" w="250" h="45" t="popup_title" wrap="False" l="0">Zones</txt>
+  </subpage>
+  <subpage name="configure_commandfusion" w="764" h="682" clip="1">
+    <txt j="0" x="30" y="50" w="279" h="30" t="setting_title" wrap="False" l="0">Powered by CommandFusion</txt>
+    <txt j="0" x="30" y="91" w="706" h="97" t="setting_content" wrap="True" l="0">This app was developed using the guiDesigner and iViewer tools by CommandFusion.
+
+CommandFusion guiDesigner allows you to create custom interfaces for controlling any Ethernet based devices or software from your iOS or Android device.</txt>
+    <txt j="0" x="30" y="175" w="279" h="30" t="setting_title" wrap="False" l="0">More Information</txt>
+    <txt j="0" x="30" y="216" w="721" h="44" t="setting_content" wrap="True" l="0">Watch the Getting Started video guide below to learn more about CommandFusion guiDesigner and iViewer.</txt>
+    <web x="87" y="318" w="590" h="348" j="0" title="0" back="0" forward="0" refresh="0" stop="0" url="http://www.youtube.com/embed/FXxH_b1oht4" bgupdates="0" />
+    <btn j="0" x="30" y="244" w="711" h="46" t="setting_item" href="http://www.commandfusion.com" flip="None" sim="1" l="0" s="1">
+      <inactive s="0">Visit CommandFusion Website - www.commandfusion.com</inactive>
+      <active s="0">Visit CommandFusion Website - www.commandfusion.com</active>
+    </btn>
+    <btn j="0" x="0" y="0" w="59" h="43" t="back" flip="None" sim="1" l="0" s="1" js="interlockSettingSubpage(&quot;d998&quot;)">
+      <inactive s="0">back</inactive>
+      <active s="0">back</active>
     </btn>
   </subpage>
 </gui>
